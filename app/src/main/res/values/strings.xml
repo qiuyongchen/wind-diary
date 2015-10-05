@@ -1,3 +1,66 @@
 <resources>
-    <string name="app_name">Diary</string>
+    <string name="about">关于</string>
+
+    <string name="about_content">\t曾经的那个秋天，黄花落在我的窗前。\n\t正当我感叹秋色时，团长大人跑过来跟我说：“阿虚，我们写一个手机软件吧，很简单的软件。”\n\t“哈？什么软件？”\n\t“嗯，就是一个写日记的软件啦，快起来准备准备，我去把美工叫来，我们开工！”\n\t看着仿若拥有无限级别精力的团长，以及她那手舞足蹈般的走路姿势，我知道，苦日子又要来了....\n\t许久许久后，一款叫“疾风日记”的软件终于在各个商店上架。\n\t只是，从那时开始，团长就再也不能像以前那样，在我身旁摇头晃脑，‘指手指脚’，一会跑美工组那边，一会又跑开发组这边，我也知道，月有阴晴圆缺，人有悲欢离合，迟早都会物是人非的....\n\n\t好吧，我承认，上面那个故事是我虚构出来的，根据真实情节虚构，请勿当真。\n\t不管如何，我们都会尽力保持更新，尽力做出让团长和诸位用户君都满意的作品，如果我们决定不再更新，我们会在最后一个版本做出说明的，谢谢大家的支持\n\n红叶工作室出品\n红叶工作室保留一切解释权\n反馈邮箱qiuych3@gmail.com</string>
+
+    <string name="about_detail">疾风日记外传</string>
+
+    <string name="app_name_english">WIND DIARY</string>
+
+    <string name="app_name">疾风日记</string>
+
+    <string name="button_save">保存</string>
+
+    <string name="export_complete">导出结束</string>
+
+    <string name="export_data">导出</string>
+
+    <string name="export_import">导出-导入</string>
+
+    <string name="export_to_json">导出为JSON文件</string>
+
+    <string name="export_to_json_detail">导出日记为json备份文件，该文件位于SD卡一个名为“疾风日记”的文件夹中，以供导入使用（会覆盖之前的备份文件，如果已经备份，请先移走备份文件）</string>
+
+    <string name="export_to_local_json_file_name">backup.json</string>
+
+    <string name="export_to_txt">导出为TXT文件</string>
+
+    <string name="export_to_txt_detail">导出日记到多个txt文件中，txt文件位于SD卡一个名为“疾风日记”的文件夹中</string>
+
+    <string name="file_dir_name">疾风日记</string>
+
+    <string name="help">帮助</string>
+
+    <string name="import_complete">导入完成</string>
+
+    <string name="import_complete_fail">导入失败</string>
+
+    <string name="import_data">导入</string>
+
+    <string name="import_from_json">从JSON文件导入</string>
+
+    <string name="import_from_json_detail">从SD卡一个名为“疾风日记”的文件夹中，导入JSON备份文件（如果该文件夹中没有backup.json文件，则导入失败）</string>
+
+    <string name="like_this_app">支持疾风日记</string>
+
+    <string name="like_this_app_detail">如果你喜欢这个软件，请点击这个链接到应用商店里给我们打个五星好评，这将是对我们的极大肯定和鼓励</string>
+
+    <string name="previous">往昔</string>
+
+    <string name="statistics">统计</string>
+
+    <string name="still_building">真的很不好意思，此模块尚在完善中</string>
+
+    <string name="today">今日</string>
+
+    <!-- -->
+
+
+    <string name="hello_world">Hello world!</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="notify_priority">notify_priority</string>
+
+    <string name="title_activity_setting">设置</string>
 </resources>
