@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -30,24 +31,36 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.ArrayList;
 
 public class MainActivity extends FragmentActivity {
+    // This is your preferred flag
+    private static final int REQ_CREATE_PATTERN = 1;
     public static ImageView mImageView;
     public static int mDPI;
     public static int mTabWidget;
     public static InputMethodManager mIMM;
     public static View mLayoutRoot;
-
     private ArrayList<Fragment> mFragments;
     private Button mButtonLeft;
     private Button mButtonRight;
     private ViewPager mViewPager;
-
-
     private Button c;
-    // This is your preferred flag
-    private static final int REQ_CREATE_PATTERN = 1;
-
     private boolean isNight = false;
     private SharedPreferences sharedPreferences;
+    private View.OnClickListener onClickListenerTabBar = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.buttonLeft:
+                    Log.i("buttonLeft", "");
+                    mViewPager.setCurrentItem(0);
+                    break;
+                case R.id.buttonRight:
+                    Log.i("buttonRight", "");
+                    mViewPager.setCurrentItem(1);
+                    break;
+            }
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +75,7 @@ public class MainActivity extends FragmentActivity {
         }
 
         // change the color of Kitkat 's status bar
-        // setStatusStyle();
+        setStatusStyle();
 
         setContentView(R.layout.activity_main);
 
@@ -172,16 +185,21 @@ public class MainActivity extends FragmentActivity {
 
     }
 
+    // 用于android4.4以上平台的状态栏变色(android5.0系统已经原生支持变色）
     private void setStatusStyle() {
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
         }
 
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(R.attr.colorPrimary);
-    }
 
+        if (isNight)
+            tintManager.setStatusBarTintResource(R.color.black);
+        else
+            tintManager.setStatusBarTintResource(R.color.green_pink
+            );
+    }
     @TargetApi(19)
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
@@ -194,21 +212,4 @@ public class MainActivity extends FragmentActivity {
         }
         win.setAttributes(winParams);
     }
-
-    private View.OnClickListener onClickListenerTabBar = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.buttonLeft:
-                    Log.i("buttonLeft", "");
-                    mViewPager.setCurrentItem(0);
-                    break;
-                case R.id.buttonRight:
-                    Log.i("buttonRight", "");
-                    mViewPager.setCurrentItem(1);
-                    break;
-            }
-        }
-
-    };
 }

@@ -65,7 +65,7 @@ public class SettingActivity extends Activity {
         recreate();
     }
 
-
+    // 用于android4.4以上平台的状态栏变色(android5.0系统已经原生支持变色）
     private void setStatusStyle() {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
             setTranslucentStatus(true);
@@ -73,9 +73,12 @@ public class SettingActivity extends Activity {
 
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(R.attr.colorPrimary);
+        if (isNight)
+            tintManager.setStatusBarTintResource(R.color.black);
+        else
+            tintManager.setStatusBarTintResource(R.color.green_pink
+            );
     }
-
     @TargetApi(19)
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
