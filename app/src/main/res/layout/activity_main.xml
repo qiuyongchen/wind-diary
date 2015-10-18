@@ -41,6 +41,16 @@
                 android:textSize="14sp" />
 
             <Button
+                android:id="@+id/buttonNight"
+                android:layout_width="70dp"
+                android:layout_height="match_parent"
+                android:background="?attr/colorPrimary"
+                android:onClick="OnClickNight"
+                android:text="@string/night_mode"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <Button
                 android:id="@+id/button_c"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"

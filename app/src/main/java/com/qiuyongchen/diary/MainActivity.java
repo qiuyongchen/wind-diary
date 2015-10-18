@@ -62,7 +62,7 @@ public class MainActivity extends FragmentActivity {
         }
 
         // change the color of Kitkat 's status bar
-        setStatusStyle();
+        // setStatusStyle();
 
         setContentView(R.layout.activity_main);
 
@@ -101,13 +101,11 @@ public class MainActivity extends FragmentActivity {
         mDPI = dm.densityDpi;
         mTabWidget = 70 * (mDPI / 160);
 
-        c = (Button) findViewById(R.id.button_c);
-
         Log.i(Integer.toString(mDPI), Integer.toString(mTabWidget));
         Log.i("ActivityMain", "initView()");
     }
 
-    public void OnClickP(View view) {
+    public void OnClickNight(View view) {
 /*        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
                 this, SettingActivity.class);
         startActivityForResult(intent, REQ_CREATE_PATTERN);
@@ -125,6 +123,13 @@ public class MainActivity extends FragmentActivity {
         editor.commit();
 
         recreate();
+    }
+
+    public void OnClickP(View view) {
+        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
+                this, SettingActivity.class);
+        startActivityForResult(intent, REQ_CREATE_PATTERN);
+
     }
 
     @Override

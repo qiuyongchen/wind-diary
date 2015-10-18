@@ -1,5 +1,7 @@
 package com.qiuyongchen.diary;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,7 +20,7 @@ import android.widget.Button;
 import com.qiuyongchen.diary.widget.SystemBarTintManager;
 import com.qiuyongchen.diary.widget.lockPattern.LockPatternActivity;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends Activity {
     private Button c;
     private boolean isNight = false;
     private SharedPreferences sharedPreferences;
@@ -31,41 +33,30 @@ public class SettingActivity extends AppCompatActivity {
         isNight = sharedPreferences.getBoolean("isNight", false);
         if (isNight) {
             this.setTheme(R.style.AppTheme_Night);
-
         } else {
             this.setTheme(R.style.AppTheme);
         }
 
+        // change the color of Kitkat 's status bar
         setStatusStyle();
 
         setContentView(R.layout.activity_setting);
 
-        c = (Button) findViewById(R.id.button_c);
     }
 
-    public void OnClickPP(View view) {
 
+    public void OnClickNight(View view) {
+/*        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
+                this, SettingActivity.class);
+        startActivityForResult(intent, REQ_CREATE_PATTERN);
+
+        this.finish();*/
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (isNight) {
             setTheme(R.style.AppTheme_Night);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = this.getWindow();
-
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-                window.setStatusBarColor(this.getResources().getColor(R.color.black));
-            }
             isNight = false;
         } else {
             setTheme(R.style.AppTheme);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = this.getWindow();
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(this.getResources().getColor(R.color.green_pink));
-            }
             isNight = true;
         }
         editor.putBoolean("isNight", isNight);
@@ -73,6 +64,7 @@ public class SettingActivity extends AppCompatActivity {
 
         recreate();
     }
+
 
     private void setStatusStyle() {
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) {
@@ -82,9 +74,9 @@ public class SettingActivity extends AppCompatActivity {
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
         tintManager.setStatusBarTintResource(R.attr.colorPrimary);
-
     }
 
+    @TargetApi(19)
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
@@ -96,4 +88,5 @@ public class SettingActivity extends AppCompatActivity {
         }
         win.setAttributes(winParams);
     }
+
 }
