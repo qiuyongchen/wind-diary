@@ -2,4 +2,10 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="alp_42447968_lockpatternview_size">350dp</dimen>
+    <dimen name="alp_42447968_separator_size">1dp</dimen>
+    <dimen name="alp_42447968_lock_pattern_dot_line_width">3dp</dimen>
+    <dimen name="alp_42447968_lock_pattern_dot_size">12dp</dimen>
+    <dimen name="alp_42447968_lock_pattern_dot_size_activated">28dp</dimen>
 </resources>
