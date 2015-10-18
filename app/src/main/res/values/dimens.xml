@@ -8,4 +8,5 @@
     <dimen name="alp_42447968_lock_pattern_dot_line_width">3dp</dimen>
     <dimen name="alp_42447968_lock_pattern_dot_size">12dp</dimen>
     <dimen name="alp_42447968_lock_pattern_dot_size_activated">28dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

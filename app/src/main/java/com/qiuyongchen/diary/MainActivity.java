@@ -108,11 +108,11 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void OnClickP(View view) {
-        /*Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
-                this, LockPatternActivity.class);
-        startActivityForResult(intent, REQ_CREATE_PATTERN);*/
+        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
+                this, SettingActivity.class);
+        startActivityForResult(intent, REQ_CREATE_PATTERN);
 
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+/*        SharedPreferences.Editor editor = sharedPreferences.edit();
         if (isNight) {
             setTheme(R.style.AppTheme_Night);
             isNight = false;
@@ -131,7 +131,7 @@ public class MainActivity extends FragmentActivity {
         initView();
 
         mFragments.clear();
-        initViewPager();
+        initViewPager();*/
     }
 
     @Override

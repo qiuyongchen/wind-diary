@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:text="A"
         android:textSize="100dp"
-        android:textColor="?colorPrimaryM"
+        android:textColor="?attr/colorPrimary"
         android:id="@+id/textView2"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />

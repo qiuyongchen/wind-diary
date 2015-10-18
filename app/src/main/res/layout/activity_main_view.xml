@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:text="B"
         android:textSize="100dp"
-        android:textColor="?colorPrimaryM"
+        android:textColor="?attr/colorPrimary"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 
