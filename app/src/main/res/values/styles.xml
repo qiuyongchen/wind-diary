@@ -2,20 +2,24 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/c_colorPrimary</item>
-        <item name="colorPrimaryDark">@color/c_colorPrimaryDark</item>
-        <item name="colorAccent">@color/c_colorAccent</item>
-        <item name="mainTextColor">#000000</item>
-        <item name="textString">默认主题</item>
+        <item name="colorPrimary">@color/green_pink</item>
+        <item name="colorPrimaryDark">@color/green_pink</item>
+        <item name="colorAccent">@color/green_pink</item>
+
+        <item name="colorPrimaryM">@color/green_pink</item>
+        <item name="colorPrimaryDarkM">@color/green_pink</item>
+        <item name="colorAccentM">@color/green_pink</item>
     </style>
 
     <!-- Night mode theme. -->
     <style name="AppTheme.Night" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/white</item>
-        <item name="colorAccent">@color/white</item>
-        <item name="mainTextColor">#000000</item>
-        <item name="textString">默认主题</item>
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorAccent">@color/black</item>
+
+        <item name="colorPrimaryM">@color/black</item>
+        <item name="colorPrimaryDarkM">@color/black</item>
+        <item name="colorAccentM">@color/black</item>
     </style>
 
     <style name="Alp_42447968"></style>

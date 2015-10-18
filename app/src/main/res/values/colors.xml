@@ -18,16 +18,6 @@
     <color name="alp_42447968_aosp_background_material_dark">#ff303030</color>
     <color name="alp_42447968_aosp_background_material_light">#ffeeeeee</color>
 
-    <color name="c_colorPrimary">#4DD298</color>
-    <!--<color name="colorPrimary">#3F51B5</color>-->
-    <color name="c_colorPrimaryDark">#4DD298</color>
-    <!--<color name="colorPrimaryDark">#303F9F</color>-->
-    <color name="c_colorAccent">#FF4081</color>
-
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-
     <color name="black">#000000</color>
     <color name="green_pink">#4DD298</color>
     <color name="white">#FFFFFF</color>

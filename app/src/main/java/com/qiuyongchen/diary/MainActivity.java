@@ -130,6 +130,7 @@ public class MainActivity extends FragmentActivity {
 
         initView();
 
+        mFragments.clear();
         initViewPager();
     }
 
@@ -180,7 +181,7 @@ public class MainActivity extends FragmentActivity {
 
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(R.attr.colorPrimary);
+        tintManager.setStatusBarTintResource(R.attr.colorPrimaryM);
     }
 
     @TargetApi(19)

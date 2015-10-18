@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="25dp"
         android:layout_alignParentTop="true"
-        android:background="?colorPrimary">
+        android:background="?colorPrimaryM">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -24,7 +24,7 @@
                 android:id="@+id/buttonLeft"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
-                android:background="?colorPrimary"
+                android:background="?colorPrimaryM"
                 android:onClick="onClickListenerTabBar"
                 android:text="@string/today"
                 android:textColor="@color/white"
@@ -34,7 +34,7 @@
                 android:id="@+id/buttonRight"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
-                android:background="?colorPrimary"
+                android:background="?colorPrimaryM"
                 android:onClick="onClickListenerTabBar"
                 android:text="@string/previous"
                 android:textColor="@color/white"
@@ -44,7 +44,7 @@
                 android:id="@+id/button_c"
                 android:layout_width="70dp"
                 android:layout_height="match_parent"
-                android:background="?colorPrimary"
+                android:background="?colorPrimaryM"
                 android:onClick="OnClickP"
                 android:text="@string/night_mode"
                 android:textColor="@color/white"
