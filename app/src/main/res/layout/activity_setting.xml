@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="com.qiuyongchen.diary.SettingActivity">
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/AppBarM"
@@ -17,7 +17,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimaryM"
+            android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
@@ -27,15 +27,15 @@
         android:layout_height="match_parent">
 
         <Button
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="切换夜间模式"
-            android:id="@+id/button"
-            android:textColor="@color/white"
-            android:onClick="OnClickPP"
-            android:background="?attr/colorPrimary"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:background="?attr/colorPrimary"
+            android:onClick="OnClickPP"
+            android:text="切换夜间模式"
+            android:textColor="@color/white" />
     </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

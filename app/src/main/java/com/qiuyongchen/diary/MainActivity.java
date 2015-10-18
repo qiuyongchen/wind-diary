@@ -108,11 +108,12 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void OnClickP(View view) {
-        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
+/*        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
                 this, SettingActivity.class);
         startActivityForResult(intent, REQ_CREATE_PATTERN);
 
-/*        SharedPreferences.Editor editor = sharedPreferences.edit();
+        this.finish();*/
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         if (isNight) {
             setTheme(R.style.AppTheme_Night);
             isNight = false;
@@ -123,15 +124,7 @@ public class MainActivity extends FragmentActivity {
         editor.putBoolean("isNight", isNight);
         editor.commit();
 
-        // change the color of Kitkat 's status bar
-        setStatusStyle();
-
-        setContentView(R.layout.activity_main);
-
-        initView();
-
-        mFragments.clear();
-        initViewPager();*/
+        recreate();
     }
 
     @Override
@@ -181,7 +174,7 @@ public class MainActivity extends FragmentActivity {
 
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(R.attr.colorPrimaryM);
+        tintManager.setStatusBarTintResource(R.attr.colorPrimary);
     }
 
     @TargetApi(19)
