@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="colorPrimaryM" format="color" />
-    <attr name="colorPrimaryDarkM" format="color" />
-    <attr name="colorAccentM" format="color" />
-
     <attr name="mainTextColor" format="reference|color" />
     <attr name="textString" format="string" />
 
