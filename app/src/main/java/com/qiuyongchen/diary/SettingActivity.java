@@ -79,7 +79,6 @@ public class SettingActivity extends Activity {
             tintManager.setStatusBarTintResource(R.color.green_pink
             );
     }
-    @TargetApi(19)
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();

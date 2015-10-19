@@ -119,11 +119,6 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void OnClickNight(View view) {
-/*        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
-                this, SettingActivity.class);
-        startActivityForResult(intent, REQ_CREATE_PATTERN);
-
-        this.finish();*/
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (isNight) {
             setTheme(R.style.AppTheme_Night);
@@ -200,7 +195,6 @@ public class MainActivity extends FragmentActivity {
             tintManager.setStatusBarTintResource(R.color.green_pink
             );
     }
-    @TargetApi(19)
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
