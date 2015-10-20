@@ -195,6 +195,7 @@ public class MainActivity extends FragmentActivity {
             tintManager.setStatusBarTintResource(R.color.green_pink
             );
     }
+
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();

@@ -41,16 +41,9 @@ public class SettingActivity extends Activity {
         setStatusStyle();
 
         setContentView(R.layout.activity_setting);
-
     }
 
-
     public void OnClickNight(View view) {
-/*        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
-                this, SettingActivity.class);
-        startActivityForResult(intent, REQ_CREATE_PATTERN);
-
-        this.finish();*/
         SharedPreferences.Editor editor = sharedPreferences.edit();
         if (isNight) {
             setTheme(R.style.AppTheme_Night);
@@ -61,7 +54,6 @@ public class SettingActivity extends Activity {
         }
         editor.putBoolean("isNight", isNight);
         editor.commit();
-
         recreate();
     }
 
@@ -79,6 +71,7 @@ public class SettingActivity extends Activity {
             tintManager.setStatusBarTintResource(R.color.green_pink
             );
     }
+
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
