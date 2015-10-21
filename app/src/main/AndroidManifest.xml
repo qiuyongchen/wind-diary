@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.qiuyongchen.diary" >
+    package="com.qiuyongchen.diary">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -12,7 +12,6 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="54f3424cfd98c50fd200043f" />
@@ -20,7 +19,7 @@
             android:name="UMENG_CHANNEL"
             android:value="XIAOMI" />
 
-        <activity android:name=".MainActivity" >
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,8 +35,8 @@
             android:theme="@style/Alp_42447968.Theme.Light" />
         <activity
             android:name=".SettingActivity"
-            android:label="@string/title_activity_setting">
-        </activity>
+            android:label="@string/title_activity_setting"></activity>
+        <activity android:name=".StatisticsActivity"></activity>
     </application>
 
 </manifest>

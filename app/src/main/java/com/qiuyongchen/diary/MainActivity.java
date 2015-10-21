@@ -1,15 +1,13 @@
 package com.qiuyongchen.diary;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -18,17 +16,20 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.qiuyongchen.diary.fragments.FragmentView;
 import com.qiuyongchen.diary.fragments.FragmentWriteOff;
-import com.qiuyongchen.diary.fragments.MyFragmentPagerAdapter;
 import com.qiuyongchen.diary.fragments.MyFragmentPageChangeListener;
+import com.qiuyongchen.diary.fragments.MyFragmentPagerAdapter;
 import com.qiuyongchen.diary.widget.SystemBarTintManager;
 import com.qiuyongchen.diary.widget.lockPattern.LockPatternActivity;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+
+/**
+ * Created by qiuyongchen on 2015/10/4.
+ */
 
 public class MainActivity extends FragmentActivity {
     // This is your preferred flag
@@ -131,13 +132,6 @@ public class MainActivity extends FragmentActivity {
         editor.commit();
 
         recreate();
-    }
-
-    public void OnClickP(View view) {
-        Intent intent = new Intent(LockPatternActivity.ACTION_CREATE_PATTERN, null,
-                this, SettingActivity.class);
-        startActivityForResult(intent, REQ_CREATE_PATTERN);
-
     }
 
     @Override
