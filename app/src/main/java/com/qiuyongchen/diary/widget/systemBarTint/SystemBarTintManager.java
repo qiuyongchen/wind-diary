@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.qiuyongchen.diary.widget;
+package com.qiuyongchen.diary.widget.systemBarTint;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;

@@ -10,7 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
-import com.qiuyongchen.diary.widget.SystemBarTintManager;
+import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 
 /**
  * Created by qiuyongchen on 2015/10/15.

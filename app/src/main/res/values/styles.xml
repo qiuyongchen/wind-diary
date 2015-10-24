@@ -7,8 +7,12 @@
         <item name="colorAccent">@color/accent_color</item>
 
         <item name="iconTextColor">@color/text_primary_color</item>
+        <item name="textColor">@color/primary_text_color</item>
+        <item name="secondaryTextColor">@color/secondary_text_color</item>
         <item name="iconLeft">@drawable/ic_left_100_white</item>
         <item name="iconSetting">@drawable/ic_settings_512_white</item>
+
+        <item name="stickyListHeadersListViewStyle">@style/Widget.AppCompat.ListView</item>
     </style>
 
     <!-- Night mode theme. -->
@@ -18,11 +22,24 @@
         <item name="colorAccent">@color/accent_color_night</item>
 
         <item name="iconTextColor">@color/text_primary_color_night</item>
+        <item name="textColor">@color/primary_text_color</item>
+        <item name="secondaryTextColor">@color/secondary_text_color</item>
         <item name="iconLeft">@drawable/ic_left_100_black</item>
         <item name="iconSetting">@drawable/ic_settings_512_black</item>
+
+        <item name="stickyListHeadersListViewStyle">@style/Widget.AppCompat.ListView</item>
     </style>
 
-    <style name="Alp_42447968"></style>
+    <style name="Widget.ListView.Day" parent="@android:style/Widget.ListView">
+        <item name="android:headerBackground">@color/text_primary_color</item>
+
+    </style>
+
+    <style name="Widget.ListView.Night" parent="@android:style/Widget.ListView">
+        <item name="android:headerBackground">@color/text_primary_color_night</item>
+    </style>
+
+    <style name="Alp_42447968" />
 
     <style name="Alp_42447968.BaseThemeResources" parent="@style/Alp_42447968">
         <item name="alp_42447968_button_bar_style">@null</item>

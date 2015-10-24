@@ -21,7 +21,7 @@ import com.qiuyongchen.diary.fragments.FragmentView;
 import com.qiuyongchen.diary.fragments.FragmentWriteOff;
 import com.qiuyongchen.diary.fragments.MyFragmentPageChangeListener;
 import com.qiuyongchen.diary.fragments.MyFragmentPagerAdapter;
-import com.qiuyongchen.diary.widget.SystemBarTintManager;
+import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 import com.qiuyongchen.diary.widget.lockPattern.LockPatternActivity;
 import com.umeng.analytics.MobclickAgent;
 
