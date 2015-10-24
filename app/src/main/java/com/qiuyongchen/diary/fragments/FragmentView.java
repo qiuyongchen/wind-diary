@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.qiuyongchen.diary.R;
+import com.qiuyongchen.diary.SettingActivity;
 import com.qiuyongchen.diary.StatisticsActivity;
 
 /**

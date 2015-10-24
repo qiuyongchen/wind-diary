@@ -2,6 +2,7 @@ package com.qiuyongchen.diary.fragments;
 
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 
@@ -29,7 +30,7 @@ public class MyFragmentPageChangeListener implements OnPageChangeListener {
         if (animation != null) {
             animation.setFillAfter(true);
             animation.setDuration(400);
-            com.qiuyongchen.diary.MainActivity.mImageView
+            MainActivity.mImageView
                     .startAnimation(animation);
         }
 
@@ -39,17 +40,19 @@ public class MyFragmentPageChangeListener implements OnPageChangeListener {
         switch (position) {
             case 0:
                 Log.i("onPageSelected", "position 0");
+                MainActivity.mButtonSetting.setVisibility(View.INVISIBLE);
                 break;
             case 1:
                 Log.i("onPageSelected", "position 1");
-                com.qiuyongchen.diary.MainActivity.mIMM.hideSoftInputFromWindow(
-                        com.qiuyongchen.diary.MainActivity.mLayoutRoot
+                MainActivity.mIMM.hideSoftInputFromWindow(
+                        MainActivity.mLayoutRoot
                                 .getWindowToken(), 0);
+                MainActivity.mButtonSetting.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 Log.i("onPageSelected", "position 2");
-                com.qiuyongchen.diary.MainActivity.mIMM.hideSoftInputFromWindow(
-                        com.qiuyongchen.diary.MainActivity.mLayoutRoot
+                MainActivity.mIMM.hideSoftInputFromWindow(
+                        MainActivity.mLayoutRoot
                                 .getWindowToken(), 0);
                 break;
         }

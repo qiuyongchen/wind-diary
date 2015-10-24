@@ -38,15 +38,16 @@ public class MainActivity extends FragmentActivity {
     public static int mDPI;
     public static int mTabWidget;
     public static InputMethodManager mIMM;
+    public static boolean isNight = false;
     public static View mLayoutRoot;
+    public static ImageView mButtonSetting;
     private ArrayList<Fragment> mFragments;
     private Button mButtonLeft;
     private Button mButtonRight;
     private ViewPager mViewPager;
     private Button c;
-    private boolean isNight = false;
     private SharedPreferences sharedPreferences;
-    private View.OnClickListener onClickListenerTabBar = new View.OnClickListener() {
+    private View.OnClickListener onClickListenerAppBar = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -57,6 +58,11 @@ public class MainActivity extends FragmentActivity {
                 case R.id.buttonRight:
                     Log.i("buttonRight", "");
                     mViewPager.setCurrentItem(1);
+                    break;
+                case R.id.buttonSetting:
+                    Log.i("buttonSetting", "");
+                    Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                    startActivity(intent);
                     break;
             }
         }
@@ -101,19 +107,19 @@ public class MainActivity extends FragmentActivity {
         mLayoutRoot = findViewById(R.id.RelativeLayoutContent);
         mViewPager = (ViewPager) findViewById(R.id.ViewPager);
         mIMM = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
+        mImageView = (ImageView) findViewById(R.id.imageViewBelow);
         mButtonLeft = (Button) findViewById(R.id.buttonLeft);
         mButtonRight = (Button) findViewById(R.id.buttonRight);
-
-        mButtonLeft.setOnClickListener(onClickListenerTabBar);
-        mButtonRight.setOnClickListener(onClickListenerTabBar);
-
-        mImageView = (ImageView) findViewById(R.id.imageViewBelow);
-
+        mButtonSetting = (ImageView) findViewById(R.id.buttonSetting);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        mButtonLeft.setOnClickListener(onClickListenerAppBar);
+        mButtonRight.setOnClickListener(onClickListenerAppBar);
+        mButtonSetting.setOnClickListener(onClickListenerAppBar);
+
         mDPI = dm.densityDpi;
-        mTabWidget = 70 * (mDPI / 160);
+        mTabWidget = 50 * (mDPI / 160);
 
         Log.i(Integer.toString(mDPI), Integer.toString(mTabWidget));
         Log.i("ActivityMain", "initView()");
@@ -149,13 +155,11 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void initViewPager() {
+        Fragment fb1 = new FragmentWriteOff();
+        Fragment fb2 = new FragmentView();
         // 存放多个Fragment的数组，每个Fragment都对应一个页面
         mFragments = new ArrayList<Fragment>();
-
-        Fragment fb1 = new FragmentWriteOff();
         mFragments.add(fb1);
-
-        Fragment fb2 = new FragmentView();
         mFragments.add(fb2);
 
         // 数组的适配器，方便管理数组
@@ -176,17 +180,20 @@ public class MainActivity extends FragmentActivity {
 
     // 用于android4.4以上平台的状态栏变色(android5.0系统已经原生支持变色）
     private void setStatusStyle() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT &&
+                Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT_WATCH) {
             setTranslucentStatus(true);
+        } else {
+            return;
         }
 
         SystemBarTintManager tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
 
         if (isNight)
-            tintManager.setStatusBarTintResource(R.color.black);
+            tintManager.setStatusBarTintResource(R.color.default_primary_color_night);
         else
-            tintManager.setStatusBarTintResource(R.color.green_pink
+            tintManager.setStatusBarTintResource(R.color.default_primary_color
             );
     }
 

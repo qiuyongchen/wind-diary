@@ -1,61 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/RelativeLayoutContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
 
-    <RelativeLayout
-        android:id="@+id/RelativeLayoutTabBar"
+    <LinearLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary">
+        android:layout_height="@dimen/activity_tab_height"
+        android:layout_gravity="top"
+        android:background="?attr/colorPrimary"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/imageViewBelow">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/activity_tab_font_height">
 
             <Button
-                android:id="@+id/buttonLeft"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:background="?attr/colorPrimary"
-                android:onClick="onClickListenerTabBar"
+                android:layout_width="@dimen/activity_tab_width"
+                android:layout_height="wrap_content"
                 android:text="@string/today"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:id="@+id/buttonLeft"
+                android:textColor="?attr/iconTextColor"
+                android:background="?attr/colorPrimary"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textStyle="bold" />
 
             <Button
-                android:id="@+id/buttonRight"
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:background="?attr/colorPrimary"
-                android:onClick="onClickListenerTabBar"
+                android:layout_width="@dimen/activity_tab_width"
+                android:layout_height="wrap_content"
                 android:text="@string/previous"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
+                android:id="@+id/buttonRight"
+                android:textColor="?attr/iconTextColor"
+                android:background="?attr/colorPrimary"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/buttonLeft"
+                android:layout_toEndOf="@+id/buttonLeft"
+                android:textStyle="bold" />
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="@dimen/activity_tab_font_height"
+                android:layout_height="@dimen/activity_tab_font_height"
+                android:id="@+id/buttonSetting"
+                android:layout_margin="@dimen/activity_tab_ic_marin"
+                android:src="?attr/iconSetting"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:visibility="invisible" />
+        </RelativeLayout>
 
         <ImageView
+            android:layout_width="@dimen/activity_tab_width"
+            android:layout_height="@dimen/activity_tab_line_height"
             android:id="@+id/imageViewBelow"
-            android:layout_width="70dp"
-            android:layout_height="2dp"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white" />
-    </RelativeLayout>
+            android:background="?attr/iconTextColor" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/FrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_below="@id/RelativeLayoutTabBar">
+        android:layout_below="@+id/appBar">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/ViewPager"
@@ -63,6 +76,7 @@
             android:layout_height="match_parent">
 
         </android.support.v4.view.ViewPager>
+
 
     </FrameLayout>
 

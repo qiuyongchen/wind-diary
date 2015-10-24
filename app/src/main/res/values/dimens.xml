@@ -2,6 +2,27 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_ic_margin">12dp</dimen>
+    <dimen name="activity_ic_width_height">48dp</dimen>
+
+    <dimen name="activity_tab_width">50dp</dimen>
+    <dimen name="activity_tab_height">48dp</dimen>
+    <dimen name="activity_tab_font_height">46dp</dimen>
+    <dimen name="activity_tab_line_height">2dp</dimen>
+    <dimen name="activity_tab_ic_marin">11dp</dimen>
+
+    <!-- Default font size. -->
+    <dimen name="Display">34sp</dimen>
+    <dimen name="Headline">24sp</dimen>
+    <dimen name="Title">20sp</dimen>
+    <dimen name="Subhead">16sp</dimen>
+    <dimen name="Body">14sp</dimen>
+    <dimen name="Caption">12sp</dimen>
+    <dimen name="Menu">14sp</dimen>
+    <dimen name="Button">14sp</dimen>
+
+    <!-- Default icon size. -->
+    <dimen name="iconSize">24dp</dimen>
 
     <dimen name="alp_42447968_lockpatternview_size">350dp</dimen>
     <dimen name="alp_42447968_separator_size">1dp</dimen>

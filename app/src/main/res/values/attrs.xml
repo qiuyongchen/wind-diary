@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="iconTextColor" format="color" />
+    <attr name="iconLeft" format="reference" />
+    <attr name="iconSetting" format="reference" />
+
     <attr name="mainTextColor" format="reference|color" />
     <attr name="textString" format="string" />
 
