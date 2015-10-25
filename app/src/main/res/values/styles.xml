@@ -7,7 +7,7 @@
         <item name="colorAccent">@color/accent_color</item>
 
         <item name="iconTextColor">@color/text_primary_color</item>
-        <item name="textColor">@color/primary_text_color</item>
+        <item name="primaryTextColor">@color/primary_text_color</item>
         <item name="secondaryTextColor">@color/secondary_text_color</item>
         <item name="iconLeft">@drawable/ic_left_100_white</item>
         <item name="iconSetting">@drawable/ic_settings_512_white</item>
@@ -22,8 +22,8 @@
         <item name="colorAccent">@color/accent_color_night</item>
 
         <item name="iconTextColor">@color/text_primary_color_night</item>
-        <item name="textColor">@color/primary_text_color</item>
-        <item name="secondaryTextColor">@color/secondary_text_color</item>
+        <item name="primaryTextColor">@color/primary_text_color_night</item>
+        <item name="secondaryTextColor">@color/secondary_text_color_night</item>
         <item name="iconLeft">@drawable/ic_left_100_black</item>
         <item name="iconSetting">@drawable/ic_settings_512_black</item>
 

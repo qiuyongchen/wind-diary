@@ -2,10 +2,11 @@
 <resources>
 
     <attr name="iconTextColor" format="color" />
-    <attr name="textColor" format="color" />
+    <attr name="primaryTextColor" format="color" />
     <attr name="secondaryTextColor" format="color" />
     <attr name="iconLeft" format="reference" />
     <attr name="iconSetting" format="reference" />
+
 
     <attr name="mainTextColor" format="reference|color" />
     <attr name="textString" format="string" />
