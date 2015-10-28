@@ -38,7 +38,7 @@
     <color name="light_primary_color_night">#C8E6C9</color>
     <color name="text_primary_color_night">#000000</color>
     <color name="accent_color_night">#34495e</color>
-    <color name="primary_text_color_night">#C1C3BF</color>
-    <color name="secondary_text_color_night">#727272</color>
+    <color name="primary_text_color_night">#989898</color>
+    <color name="secondary_text_color_night">#494A49</color>
     <color name="divider_color_night">#B6B6B6</color>
 </resources>

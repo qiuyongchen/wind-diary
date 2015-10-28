@@ -40,4 +40,42 @@
             android:background="@color/white" />
     </RelativeLayout>
 
+    <Button
+        android:id="@+id/export_to_json"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/RelativeLayoutTabBar"
+        android:layout_marginTop="50dp"
+        android:onClick="OnClickExportToJson"
+        android:text="@string/export_to_json" />
+
+    <Button
+        android:id="@+id/export_to_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/export_to_json"
+        android:layout_marginTop="45dp"
+        android:onClick="OnClickExportToTxt"
+        android:text="@string/export_to_txt" />
+
+    <Button
+        android:id="@+id/import_from_json"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:onClick="OnClickImportFromJson"
+        android:text="@string/import_from_json" />
+
 </RelativeLayout>
