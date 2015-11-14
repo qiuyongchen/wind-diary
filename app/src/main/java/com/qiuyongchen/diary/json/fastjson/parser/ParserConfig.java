@@ -15,9 +15,62 @@
  */
 package com.qiuyongchen.diary.json.fastjson.parser;
 
+import com.qiuyongchen.diary.json.fastjson.JSONArray;
+import com.qiuyongchen.diary.json.fastjson.JSONObject;
+import com.qiuyongchen.diary.json.fastjson.annotation.JSONType;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ArrayDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ArrayListTypeFieldDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.BigDecimalDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.BigIntegerDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.BooleanDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.BooleanFieldDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CalendarDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CharArrayDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CharacterDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CharsetDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ClassDerializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CollectionDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.DateDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.DateFormatDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.DefaultFieldDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.EnumDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.FieldDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.FileDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.InetAddressDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.InetSocketAddressDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.IntegerDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.IntegerFieldDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.JSONArrayDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.JSONObjectDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.JavaBeanDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.JavaObjectDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.LocaleDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.LongDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.LongFieldDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.MapDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.NumberDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ObjectDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.PatternDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ReferenceDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.SqlDateDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.StackTraceElementDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.StringDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.StringFieldDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ThrowableDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.TimeDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.TimeZoneDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.TimestampDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.URIDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.URLDeserializer;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.UUIDDeserializer;
+import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
+import com.qiuyongchen.diary.json.fastjson.util.IdentityHashMap;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.Serializable;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -49,81 +102,23 @@ import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongArray;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
-
-import com.qiuyongchen.diary.json.fastjson.JSONArray;
-import com.qiuyongchen.diary.json.fastjson.JSONObject;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ArrayDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ArrayListStringDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ArrayListStringFieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ArrayListTypeDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ArrayListTypeFieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.BigDecimalDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.BigIntegerDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.BooleanDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.BooleanFieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CalendarDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CharArrayDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CharacterDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ClassDerializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.CollectionDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.DateDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.DateFormatDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.DefaultFieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.DefaultObjectDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.EnumDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.FieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.FileDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.FloatDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.InetAddressDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.InetSocketAddressDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.IntegerDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.IntegerFieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.JSONArrayDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.JSONObjectDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.JavaBeanDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.JavaObjectDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.LocaleDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.LongDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.LongFieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.MapDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.NumberDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ObjectDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.SimpleTypeDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.SqlDateDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.StackTraceElementDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.StringDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.StringFieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.ThrowableDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.TimeDeserializer;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.TimestampDeserializer;
-import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
-import com.qiuyongchen.diary.json.fastjson.util.IdentityHashMap;
 
 /**
  * @author wenshao<szujobs@hotmail.com>
  */
 public class ParserConfig {
 
-    public static ParserConfig getGlobalInstance() {
-        return global;
-    }
-
-    private final Set<Class<?>>                             primitiveClasses  = new HashSet<Class<?>>();
-
-    private static ParserConfig                             global            = new ParserConfig();
-
-    private final IdentityHashMap<Type, ObjectDeserializer> derializers       = new IdentityHashMap<Type, ObjectDeserializer>();
-
-    private DefaultObjectDeserializer                       defaultSerializer = new DefaultObjectDeserializer();
-
-    private boolean                                         asmEnable         = false;
-
-    protected final SymbolTable                             symbolTable       = new SymbolTable();
-
-    public DefaultObjectDeserializer getDefaultSerializer() {
-        return defaultSerializer;
-    }
+    private static ParserConfig global = new ParserConfig();
+    protected final SymbolTable symbolTable = new SymbolTable();
+    private final Set<Class<?>> primitiveClasses = new HashSet<Class<?>>();
+    private final IdentityHashMap<Type, ObjectDeserializer> derializers = new IdentityHashMap<Type, ObjectDeserializer>();
 
     public ParserConfig(){
         primitiveClasses.add(boolean.class);
@@ -194,8 +189,6 @@ public class ParserConfig {
         derializers.put(Long.class, LongDeserializer.instance);
         derializers.put(BigInteger.class, BigIntegerDeserializer.instance);
         derializers.put(BigDecimal.class, BigDecimalDeserializer.instance);
-        derializers.put(float.class, FloatDeserializer.instance);
-        derializers.put(Float.class, FloatDeserializer.instance);
         derializers.put(double.class, NumberDeserializer.instance);
         derializers.put(Double.class, NumberDeserializer.instance);
         derializers.put(boolean.class, BooleanDeserializer.instance);
@@ -203,33 +196,64 @@ public class ParserConfig {
         derializers.put(Class.class, ClassDerializer.instance);
         derializers.put(char[].class, CharArrayDeserializer.instance);
 
-        derializers.put(UUID.class, SimpleTypeDeserializer.instance);
-        derializers.put(TimeZone.class, SimpleTypeDeserializer.instance);
+        derializers.put(AtomicBoolean.class, BooleanDeserializer.instance);
+        derializers.put(AtomicInteger.class, IntegerDeserializer.instance);
+        derializers.put(AtomicLong.class, LongDeserializer.instance);
+        derializers.put(AtomicReference.class, ReferenceDeserializer.instance);
+
+        derializers.put(WeakReference.class, ReferenceDeserializer.instance);
+        derializers.put(SoftReference.class, ReferenceDeserializer.instance);
+
+        derializers.put(UUID.class, UUIDDeserializer.instance);
+        derializers.put(TimeZone.class, TimeZoneDeserializer.instance);
         derializers.put(Locale.class, LocaleDeserializer.instance);
         derializers.put(InetAddress.class, InetAddressDeserializer.instance);
         derializers.put(Inet4Address.class, InetAddressDeserializer.instance);
         derializers.put(Inet6Address.class, InetAddressDeserializer.instance);
         derializers.put(InetSocketAddress.class, InetSocketAddressDeserializer.instance);
         derializers.put(File.class, FileDeserializer.instance);
-        derializers.put(URI.class, SimpleTypeDeserializer.instance);
-        derializers.put(URL.class, SimpleTypeDeserializer.instance);
-        derializers.put(Pattern.class, SimpleTypeDeserializer.instance);
-        derializers.put(Charset.class, SimpleTypeDeserializer.instance);
+        derializers.put(URI.class, URIDeserializer.instance);
+        derializers.put(URL.class, URLDeserializer.instance);
+        derializers.put(Pattern.class, PatternDeserializer.instance);
+        derializers.put(Charset.class, CharsetDeserializer.instance);
         derializers.put(Number.class, NumberDeserializer.instance);
+        derializers.put(AtomicIntegerArray.class, ArrayDeserializer.instance);
+        derializers.put(AtomicLongArray.class, ArrayDeserializer.instance);
         derializers.put(StackTraceElement.class, StackTraceElementDeserializer.instance);
 
-        derializers.put(Serializable.class, defaultSerializer);
-        derializers.put(Cloneable.class, defaultSerializer);
-        derializers.put(Comparable.class, defaultSerializer);
-        derializers.put(Closeable.class, defaultSerializer);
+        derializers.put(Serializable.class, JavaObjectDeserializer.instance);
+        derializers.put(Cloneable.class, JavaObjectDeserializer.instance);
+        derializers.put(Comparable.class, JavaObjectDeserializer.instance);
+        derializers.put(Closeable.class, JavaObjectDeserializer.instance);
+
     }
 
-    public boolean isAsmEnable() {
-        return asmEnable;
+    public static ParserConfig getGlobalInstance() {
+        return global;
     }
 
-    public void setAsmEnable(boolean asmEnable) {
-        this.asmEnable = asmEnable;
+    public static Field getField(Class<?> clazz, String fieldName) {
+        Field field = getField0(clazz, fieldName);
+        if (field == null) {
+            field = getField0(clazz, "_" + fieldName);
+        }
+        if (field == null) {
+            field = getField0(clazz, "m_" + fieldName);
+        }
+        return field;
+    }
+
+    private static Field getField0(Class<?> clazz, String fieldName) {
+        for (Field item : clazz.getDeclaredFields()) {
+            if (fieldName.equals(item.getName())) {
+                return item;
+            }
+        }
+        if (clazz.getSuperclass() != null && clazz.getSuperclass() != Object.class) {
+            return getField(clazz.getSuperclass(), fieldName);
+        }
+
+        return null;
     }
 
     public SymbolTable getSymbolTable() {
@@ -259,7 +283,7 @@ public class ParserConfig {
             }
         }
 
-        return this.defaultSerializer;
+        return JavaObjectDeserializer.instance;
     }
 
     public ObjectDeserializer getDeserializer(Class<?> clazz, Type type) {
@@ -277,10 +301,25 @@ public class ParserConfig {
             return derializer;
         }
 
+        {
+            JSONType annotation = clazz.getAnnotation(JSONType.class);
+            if (annotation != null) {
+                Class<?> mappingTo = annotation.mappingTo();
+                if (mappingTo != Void.class) {
+                    return getDeserializer(mappingTo, mappingTo);
+                }
+            }
+        }
+
         if (type instanceof WildcardType || type instanceof TypeVariable || type instanceof ParameterizedType) {
             derializer = derializers.get(clazz);
         }
 
+        if (derializer != null) {
+            return derializer;
+        }
+
+        derializer = derializers.get(type);
         if (derializer != null) {
             return derializer;
         }
@@ -291,16 +330,7 @@ public class ParserConfig {
             return ArrayDeserializer.instance;
         } else if (clazz == Set.class || clazz == HashSet.class || clazz == Collection.class || clazz == List.class
                    || clazz == ArrayList.class) {
-            if (type instanceof ParameterizedType) {
-                Type itemType = ((ParameterizedType) type).getActualTypeArguments()[0];
-                if (itemType == String.class) {
-                    derializer = ArrayListStringDeserializer.instance;
-                } else {
-                    derializer = new ArrayListTypeDeserializer(clazz, itemType);
-                }
-            } else {
-                derializer = CollectionDeserializer.instance;
-            }
+            derializer = CollectionDeserializer.instance;
         } else if (Collection.class.isAssignableFrom(clazz)) {
             derializer = CollectionDeserializer.instance;
         } else if (Map.class.isAssignableFrom(clazz)) {
@@ -315,24 +345,12 @@ public class ParserConfig {
 
         return derializer;
     }
-    
-    public ObjectDeserializer createJavaBeanDeserializer(Class<?> clazz) {
-        return createJavaBeanDeserializer(clazz, clazz);
-    }
 
     public ObjectDeserializer createJavaBeanDeserializer(Class<?> clazz, Type type) {
-        if (clazz == Class.class) {
-            return this.defaultSerializer;
-        }
-
         return new JavaBeanDeserializer(this, clazz, type);
     }
 
     public FieldDeserializer createFieldDeserializer(ParserConfig mapping, Class<?> clazz, FieldInfo fieldInfo) {
-        return createFieldDeserializerWithoutASM(mapping, clazz, fieldInfo);
-    }
-
-    public FieldDeserializer createFieldDeserializerWithoutASM(ParserConfig mapping, Class<?> clazz, FieldInfo fieldInfo) {
         Class<?> fieldClass = fieldInfo.getFieldClass();
 
         if (fieldClass == boolean.class || fieldClass == Boolean.class) {
@@ -352,14 +370,6 @@ public class ParserConfig {
         }
 
         if (fieldClass == List.class || fieldClass == ArrayList.class) {
-            Type fieldType = fieldInfo.getFieldType();
-            if (fieldType instanceof ParameterizedType) {
-                Type itemType = ((ParameterizedType) fieldType).getActualTypeArguments()[0];
-                if (itemType == String.class) {
-                    return new ArrayListStringFieldDeserializer(mapping, clazz, fieldInfo);
-                }
-            }
-
             return new ArrayListTypeFieldDeserializer(mapping, clazz, fieldInfo);
         }
 
@@ -376,19 +386,6 @@ public class ParserConfig {
 
     public boolean isPrimitive(Class<?> clazz) {
         return primitiveClasses.contains(clazz);
-    }
-
-    public static Field getField(Class<?> clazz, String fieldName) {
-        for (Field item : clazz.getDeclaredFields()) {
-            if (fieldName.equals(item.getName())) {
-                return item;
-            }
-        }
-        if (clazz.getSuperclass() != null && clazz.getSuperclass() != Object.class) {
-            return getField(clazz.getSuperclass(), fieldName);
-        }
-
-        return null;
     }
 
     public Map<String, FieldDeserializer> getFieldDeserializers(Class<?> clazz) {

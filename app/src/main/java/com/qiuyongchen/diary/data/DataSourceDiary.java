@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * to open/close database, read something from database, write something to
  * database
  *
- * @author redleaf
+ * @author qiuyongchen
  */
 public class DataSourceDiary {
     private SQLiteDatabase mSQLiteDatabase;

@@ -15,7 +15,12 @@
  */
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
+import com.qiuyongchen.diary.json.fastjson.util.IdentityHashMap;
+
 import java.io.File;
+import java.io.StringWriter;
+import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -30,9 +35,13 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongArray;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
-
-import com.qiuyongchen.diary.json.fastjson.util.IdentityHashMap;
 
 /**
  * circular references detect
@@ -43,24 +52,6 @@ public class SerializeConfig extends IdentityHashMap<Type, ObjectSerializer> {
 
     private final static SerializeConfig globalInstance = new SerializeConfig();
 
-    private boolean                      asm            = false;
-
-    public ObjectSerializer createJavaBeanSerializer(Class<?> clazz) {
-        return new JavaBeanSerializer(clazz);
-    }
-
-    public boolean isAsmEnable() {
-        return asm;
-    }
-
-    public void setAsmEnable(boolean asmEnable) {
-        this.asm = asmEnable;
-    }
-
-    public final static SerializeConfig getGlobalInstance() {
-        return globalInstance;
-    }
-
     public SerializeConfig(){
         this(DEFAULT_TABLE_SIZE);
     }
@@ -69,24 +60,23 @@ public class SerializeConfig extends IdentityHashMap<Type, ObjectSerializer> {
         super(tableSize);
 
         put(Boolean.class, BooleanSerializer.instance);
-        put(boolean.class, BooleanSerializer.instance);
         put(Character.class, CharacterSerializer.instance);
-        put(byte.class, IntegerSerializer.instance);
-        put(Byte.class, IntegerSerializer.instance);
-        put(Short.class, IntegerSerializer.instance);
-        put(short.class, IntegerSerializer.instance);
+        put(Byte.class, ByteSerializer.instance);
+        put(Short.class, ShortSerializer.instance);
         put(Integer.class, IntegerSerializer.instance);
-        put(int.class, IntegerSerializer.instance);
         put(Long.class, LongSerializer.instance);
-        put(long.class, LongSerializer.instance);
         put(Float.class, FloatSerializer.instance);
-        put(float.class, FloatSerializer.instance);
         put(Double.class, DoubleSerializer.instance);
-        put(double.class, DoubleSerializer.instance);
         put(BigDecimal.class, BigDecimalSerializer.instance);
         put(BigInteger.class, BigIntegerSerializer.instance);
         put(String.class, StringSerializer.instance);
         put(byte[].class, ByteArraySerializer.instance);
+        put(short[].class, ShortArraySerializer.instance);
+        put(int[].class, IntArraySerializer.instance);
+        put(long[].class, LongArraySerializer.instance);
+        put(float[].class, FloatArraySerializer.instance);
+        put(double[].class, DoubleArraySerializer.instance);
+        put(boolean[].class, BooleanArraySerializer.instance);
         put(char[].class, CharArraySerializer.instance);
         put(Object[].class, ObjectArraySerializer.instance);
         put(Class.class, ClassSerializer.instance);
@@ -105,8 +95,29 @@ public class SerializeConfig extends IdentityHashMap<Type, ObjectSerializer> {
         put(Appendable.class, AppendableSerializer.instance);
         put(StringBuffer.class, AppendableSerializer.instance);
         put(StringBuilder.class, AppendableSerializer.instance);
-        put(Pattern.class, ToStringSerializer.instance);
+        put(StringWriter.class, AppendableSerializer.instance);
+        put(Pattern.class, PatternSerializer.instance);
         put(Charset.class, ToStringSerializer.instance);
+
+        // atomic
+        put(AtomicBoolean.class, AtomicBooleanSerializer.instance);
+        put(AtomicInteger.class, AtomicIntegerSerializer.instance);
+        put(AtomicLong.class, AtomicLongSerializer.instance);
+        put(AtomicReference.class, ReferenceSerializer.instance);
+        put(AtomicIntegerArray.class, AtomicIntegerArraySerializer.instance);
+        put(AtomicLongArray.class, AtomicLongArraySerializer.instance);
+
+        put(WeakReference.class, ReferenceSerializer.instance);
+        put(SoftReference.class, ReferenceSerializer.instance);
+
+    }
+
+    public final static SerializeConfig getGlobalInstance() {
+        return globalInstance;
+    }
+
+    public ObjectSerializer createJavaBeanSerializer(Class<?> clazz) {
+        return new JavaBeanSerializer(clazz);
     }
 
 }

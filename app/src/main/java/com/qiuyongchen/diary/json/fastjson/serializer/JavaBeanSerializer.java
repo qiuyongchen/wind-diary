@@ -15,6 +15,11 @@
  */
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSON;
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
+import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -23,10 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
-import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
 
 /**
  * @author wenshao<szujobs@hotmail.com>
@@ -37,16 +38,35 @@ public class JavaBeanSerializer implements ObjectSerializer {
     private final FieldSerializer[] getters;
     private final FieldSerializer[] sortedGetters;
 
-    public FieldSerializer[] getGetters() {
-        return getters;
-    }
-
     public JavaBeanSerializer(Class<?> clazz){
         this(clazz, (Map<String, String>) null);
     }
 
     public JavaBeanSerializer(Class<?> clazz, String... aliasList){
         this(clazz, createAliasMap(aliasList));
+    }
+
+    public JavaBeanSerializer(Class<?> clazz, Map<String, String> aliasMap){
+        {
+        	List<FieldSerializer> getterList = new ArrayList<FieldSerializer>();
+	        List<FieldInfo> fieldInfoList = TypeUtils.computeGetters(clazz, aliasMap, false);
+
+	        for (FieldInfo fieldInfo : fieldInfoList) {
+	            getterList.add(createFieldSerializer(fieldInfo));
+	        }
+
+	        getters = getterList.toArray(new FieldSerializer[getterList.size()]);
+        }
+        {
+        	List<FieldSerializer> getterList = new ArrayList<FieldSerializer>();
+	        List<FieldInfo> fieldInfoList = TypeUtils.computeGetters(clazz, aliasMap, true);
+
+	        for (FieldInfo fieldInfo : fieldInfoList) {
+	            getterList.add(createFieldSerializer(fieldInfo));
+	        }
+
+            sortedGetters = getterList.toArray(new FieldSerializer[getterList.size()]);
+        }
     }
 
     static Map<String, String> createAliasMap(String... aliasList) {
@@ -58,27 +78,8 @@ public class JavaBeanSerializer implements ObjectSerializer {
         return aliasMap;
     }
 
-    public JavaBeanSerializer(Class<?> clazz, Map<String, String> aliasMap){
-        {
-        	List<FieldSerializer> getterList = new ArrayList<FieldSerializer>();
-	        List<FieldInfo> fieldInfoList = TypeUtils.computeGetters(clazz, aliasMap, false);
-	
-	        for (FieldInfo fieldInfo : fieldInfoList) {
-	            getterList.add(createFieldSerializer(fieldInfo));
-	        }
-	
-	        getters = getterList.toArray(new FieldSerializer[getterList.size()]);
-        }
-        {
-        	List<FieldSerializer> getterList = new ArrayList<FieldSerializer>();
-	        List<FieldInfo> fieldInfoList = TypeUtils.computeGetters(clazz, aliasMap, true);
-	
-	        for (FieldInfo fieldInfo : fieldInfoList) {
-	            getterList.add(createFieldSerializer(fieldInfo));
-	        }
-	
-	        sortedGetters = getterList.toArray(new FieldSerializer[getterList.size()]);
-        }
+    public FieldSerializer[] getGetters() {
+        return getters;
     }
 
     protected boolean isWriteClassName(JSONSerializer serializer, Object obj, Type fieldType, Object fieldName) {
@@ -122,7 +123,7 @@ public class JavaBeanSerializer implements ObjectSerializer {
             if (isWriteClassName(serializer, object, fieldType, fieldName)) {
                 Class<?> objClass = object.getClass();
                 if (objClass != fieldType) {
-                    out.writeFieldName("@type");
+                    out.writeFieldName(JSON.DEFAULT_TYPE_KEY);
                     serializer.write(object.getClass());
                     commaFlag = true;
                 }
@@ -138,6 +139,10 @@ public class JavaBeanSerializer implements ObjectSerializer {
                             continue;
                         }
                     }
+                }
+
+                if (!FilterUtils.applyName(serializer, object, fieldSerializer.getName())) {
+                    continue;
                 }
 
                 Object propertyValue = fieldSerializer.getPropertyValue(object);

@@ -3,16 +3,16 @@ package com.qiuyongchen.diary.data;
 /**
  * record in database
  *
- * @author redleaf
+ * @author qiuyongchen
  */
 public class DiaryItem {
-    public DiaryItem() {
-    }
-
     public long _id;
     public String content;
     public String date;
     public String time;
+
+    public DiaryItem() {
+    }
 
     /**
      * @param _id

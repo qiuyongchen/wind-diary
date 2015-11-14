@@ -15,10 +15,11 @@
  */
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSON;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -42,17 +43,17 @@ public class MapSerializer implements ObjectSerializer {
         Map<?, ?> map = (Map<?, ?>) object;
 
         if (out.isEnabled(SerializerFeature.SortField)) {
-        	if ((!(map instanceof SortedMap)) && !(map instanceof LinkedHashMap)) {
-	            try {
-	                map = new TreeMap(map);
-	            } catch (Exception ex) {
-	                // skip
-	            }
-        	}
+            if ((!(map instanceof SortedMap)) && !(map instanceof LinkedHashMap)) {
+                try {
+                    map = new TreeMap(map);
+                } catch (Exception ex) {
+                    // skip
+                }
+            }
         }
-        
+
         if (serializer.containsReference(object)) {
-        	serializer.writeReference(object);
+            serializer.writeReference(object);
             return;
         }
 
@@ -60,20 +61,20 @@ public class MapSerializer implements ObjectSerializer {
         serializer.setContext(parent, object, fieldName);
         try {
             out.write('{');
-            
+
             serializer.incrementIndent();
 
             Class<?> preClazz = null;
             ObjectSerializer preWriter = null;
 
             boolean first = true;
-            
+
             if (out.isEnabled(SerializerFeature.WriteClassName)) {
-                out.writeFieldName("@type");
+                out.writeFieldName(JSON.DEFAULT_TYPE_KEY);
                 out.writeString(object.getClass().getName());
                 first = false;
             }
-            
+
             for (Map.Entry entry : map.entrySet()) {
                 Object value = entry.getValue();
 
@@ -81,34 +82,17 @@ public class MapSerializer implements ObjectSerializer {
 
                 if (entryKey == null || entryKey instanceof String) {
                     String key = (String) entryKey;
-                    List<PropertyFilter> propertyFilters = serializer.getPropertyFiltersDirect();
-                    if (propertyFilters != null) {
-                        boolean apply = true;
-                        for (PropertyFilter propertyFilter : propertyFilters) {
-                            if (!propertyFilter.apply(object, key, value)) {
-                                apply = false;
-                                break;
-                            }
-                        }
 
-                        if (!apply) {
-                            continue;
-                        }
+                    if (!FilterUtils.applyName(serializer, object, key)) {
+                        continue;
                     }
 
-                    List<NameFilter> nameFilters = serializer.getNameFiltersDirect();
-                    if (nameFilters != null) {
-                        for (NameFilter nameFilter : nameFilters) {
-                            key = nameFilter.process(object, key, value);
-                        }
+                    if (!FilterUtils.apply(serializer, object, key, value)) {
+                        continue;
                     }
 
-                    List<ValueFilter> valueFilters = serializer.getValueFiltersDirect();
-                    if (valueFilters != null) {
-                        for (ValueFilter valueFilter : valueFilters) {
-                            value = valueFilter.process(object, key, value);
-                        }
-                    }
+                    key = FilterUtils.processKey(serializer, object, key, value);
+                    value = FilterUtils.processValue(serializer, object, key, value);
 
                     if (value == null) {
                         if (!serializer.isEnabled(SerializerFeature.WriteMapNullValue)) {
@@ -154,7 +138,7 @@ public class MapSerializer implements ObjectSerializer {
         } finally {
             serializer.setContext(parent);
         }
-        
+
         serializer.decrementIdent();
         if (out.isEnabled(SerializerFeature.PrettyFormat) && map.size() > 0) {
             serializer.println();

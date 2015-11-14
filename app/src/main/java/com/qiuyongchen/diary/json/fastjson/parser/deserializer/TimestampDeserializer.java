@@ -1,14 +1,14 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
 import java.lang.reflect.Type;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
-
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
 
 public class TimestampDeserializer extends AbstractDateDeserializer implements ObjectDeserializer {
 
@@ -21,12 +21,12 @@ public class TimestampDeserializer extends AbstractDateDeserializer implements O
             return null;
         }
 
-        if (val instanceof Date) {
-            return (T) new Timestamp(((Date) val).getTime());
+        if (val instanceof java.util.Date) {
+            return (T) new java.sql.Timestamp(((Date) val).getTime());
         }
 
         if (val instanceof Number) {
-            return (T) new Timestamp(((Number) val).longValue());
+            return (T) new java.sql.Timestamp(((Number) val).longValue());
         }
 
         if (val instanceof String) {
@@ -37,14 +37,14 @@ public class TimestampDeserializer extends AbstractDateDeserializer implements O
 
             DateFormat dateFormat = parser.getDateFormat();
             try {
-                Date date = (Date) dateFormat.parse(strVal);
+                Date date = dateFormat.parse(strVal);
                 return (T) new Timestamp(date.getTime());
             } catch (ParseException e) {
                 // skip
             }
 
             long longVal = Long.parseLong(strVal);
-            return (T) new Timestamp(longVal);
+            return (T) new java.sql.Timestamp(longVal);
         }
 
         throw new JSONException("parse error");

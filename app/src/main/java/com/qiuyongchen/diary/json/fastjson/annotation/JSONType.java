@@ -1,11 +1,11 @@
 package com.qiuyongchen.diary.json.fastjson.annotation;
 
+import com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature;
 
 /**
  * @author wenshao<szujobs@hotmail.com>
@@ -21,4 +21,8 @@ public @interface JSONType {
     String[] ignores() default {};
 
     SerializerFeature[] serialzeFeatures() default {};
+
+    boolean alphabetic() default true;
+
+    Class<?> mappingTo() default Void.class;
 }

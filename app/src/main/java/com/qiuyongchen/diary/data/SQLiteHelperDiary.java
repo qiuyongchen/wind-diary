@@ -9,7 +9,7 @@ import android.util.Log;
 /**
  * help to create database and upgrade database
  *
- * @author redleaf
+ * @author qiuyongchen
  */
 public class SQLiteHelperDiary extends SQLiteOpenHelper {
     public static final String TABLE_DIARY = "diary";
@@ -38,7 +38,6 @@ public class SQLiteHelperDiary extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        // TODO Auto-generated method stub
         database.execSQL("CREATE TABLE " + TABLE_DIARY + " (" + COLUMN_ID
                 + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_CONTENT
                 + " TEXT NOT NULL, " + COLUMN_DATE + " TEXT NOT NULL, "

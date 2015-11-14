@@ -1,13 +1,13 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.ParseException;
-
 import com.qiuyongchen.diary.json.fastjson.JSONException;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
+import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
 
 public class DateDeserializer extends AbstractDateDeserializer implements ObjectDeserializer {
 
@@ -31,8 +31,12 @@ public class DateDeserializer extends AbstractDateDeserializer implements Object
             }
 
             JSONScanner dateLexer = new JSONScanner(strVal);
-            if (dateLexer.scanISO8601DateIfMatch()) {
-                return (T) dateLexer.getCalendar().getTime();
+            try {
+                if (dateLexer.scanISO8601DateIfMatch(false)) {
+                    return (T) dateLexer.getCalendar().getTime();
+                }
+            } finally {
+                dateLexer.close();
             }
 
             DateFormat dateFormat = parser.getDateFormat();

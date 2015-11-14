@@ -40,12 +40,12 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.qiuyongchen.diary.R;
 import com.qiuyongchen.diary.widget.lockPattern.utils.FloatAnimator;
 import com.qiuyongchen.diary.widget.lockPattern.utils.ResourceUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Displays and detects the user's unlock attempt, which is a drag of a finger across 9 regions of the screen.
@@ -55,190 +55,6 @@ import com.qiuyongchen.diary.widget.lockPattern.utils.ResourceUtils;
 public class LockPatternView extends View {
 
     /**
-     * Represents a cell in the MATRIX_WIDTH x MATRIX_WIDTH matrix of the unlock pattern view.
-     */
-    public static class Cell implements Parcelable {
-
-        /**
-         * Row.
-         */
-        public final int row;
-
-        /**
-         * Column.
-         */
-        public final int column;
-
-        /*
-         * keep # objects limited to MATRIX_SIZE
-         */
-        static Cell[][] sCells = new Cell[MATRIX_WIDTH][MATRIX_WIDTH];
-
-        static {
-            for (int i = 0; i < MATRIX_WIDTH; i++) {
-                for (int j = 0; j < MATRIX_WIDTH; j++) {
-                    sCells[i][j] = new Cell(i, j);
-                }
-            }
-        }
-
-        /**
-         * @param row    The row of the cell.
-         * @param column The column of the cell.
-         */
-        private Cell(int row, int column) {
-            checkRange(row, column);
-            this.row = row;
-            this.column = column;
-        }
-
-        /**
-         * Gets the ID.It is counted from left to right, top to bottom of the matrix, starting by zero.
-         *
-         * @return the ID.
-         */
-        public int getId() {
-            return row * MATRIX_WIDTH + column;
-        }// getId()
-
-        /**
-         * @param row    The row of the cell.
-         * @param column The column of the cell.
-         */
-        public static synchronized Cell of(int row, int column) {
-            checkRange(row, column);
-            return sCells[row][column];
-        }
-
-        /**
-         * Gets a cell from its ID.
-         *
-         * @param id the cell ID.
-         * @return the cell.
-         * @author Hai Bison
-         * @since v2.7 beta
-         */
-        public static synchronized Cell of(int id) {
-            return of(id / MATRIX_WIDTH, id % MATRIX_WIDTH);
-        }// of()
-
-        private static void checkRange(int row, int column) {
-            if (row < 0 || row > MATRIX_WIDTH - 1) {
-                throw new IllegalArgumentException("row must be in range 0-"
-                        + (MATRIX_WIDTH - 1));
-            }
-            if (column < 0 || column > MATRIX_WIDTH - 1) {
-                throw new IllegalArgumentException("column must be in range 0-"
-                        + (MATRIX_WIDTH - 1));
-            }
-        }
-
-        @Override
-        public String toString() {
-            return "(ROW=" + row + ",COL=" + column + ")";
-        }// toString()
-
-        @Override
-        public boolean equals(Object object) {
-            if (object instanceof Cell)
-                return column == ((Cell) object).column
-                        && row == ((Cell) object).row;
-            return super.equals(object);
-        }// equals()
-
-        /*
-         * PARCELABLE
-         */
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }// describeContents()
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(column);
-            dest.writeInt(row);
-        }// writeToParcel()
-
-        public static final Creator<Cell> CREATOR = new Creator<Cell>() {
-
-            public Cell createFromParcel(Parcel in) {
-                return new Cell(in);
-            }// createFromParcel()
-
-            public Cell[] newArray(int size) {
-                return new Cell[size];
-            }// newArray()
-        };// CREATOR
-
-        private Cell(Parcel in) {
-            column = in.readInt();
-            row = in.readInt();
-        }// Cell()
-
-    }// Cell
-
-    /**
-     * How to display the current pattern.
-     */
-    public enum DisplayMode {
-
-        /**
-         * The pattern drawn is correct (i.e draw it in a friendly color)
-         */
-        Correct,
-
-        /**
-         * Animate the pattern (for demo, and help).
-         */
-        Animate,
-
-        /**
-         * The pattern is wrong (i.e draw a foreboding color)
-         */
-        Wrong
-    }
-
-    /**
-     * The call back interface for detecting patterns entered by the user.
-     */
-    public interface OnPatternListener {
-
-        /**
-         * A new pattern has begun.
-         */
-        void onPatternStart();
-
-        /**
-         * The pattern was cleared.
-         */
-        void onPatternCleared();
-
-        /**
-         * The user extended the pattern currently being drawn by one cell.
-         *
-         * @param pattern The pattern with newly added cell.
-         */
-        void onPatternCellAdded(List<Cell> pattern);
-
-        /**
-         * A pattern was detected from the user.
-         *
-         * @param pattern The pattern.
-         */
-        void onPatternDetected(List<Cell> pattern);
-    }
-
-    // Aspect to use when rendering this view
-    private static final int ASPECT_SQUARE = 0; // View will be the minimum of
-    // width/height
-    private static final int ASPECT_LOCK_WIDTH = 1; // Fixed width; height will
-    // be minimum of (w,h)
-    private static final int ASPECT_LOCK_HEIGHT = 2; // Fixed height; width will
-    // be minimum of (w,h)
-
-    /**
      * This is the width of the matrix (the number of dots per row and column). Change this value to change the
      * dimension of the pattern's matrix.
      *
@@ -246,36 +62,38 @@ public class LockPatternView extends View {
      * @since v2.7 beta
      */
     public static final int MATRIX_WIDTH = 3;
-
     /**
      * The size of the pattern's matrix.
      */
     public static final int MATRIX_SIZE = MATRIX_WIDTH * MATRIX_WIDTH;
-
+    // Aspect to use when rendering this view
+    private static final int ASPECT_SQUARE = 0; // View will be the minimum of
+    // width/height
+    private static final int ASPECT_LOCK_WIDTH = 1; // Fixed width; height will
+    // be minimum of (w,h)
+    private static final int ASPECT_LOCK_HEIGHT = 2; // Fixed height; width will
     private static final boolean PROFILE_DRAWING = false;
-    private final CellState[][] mCellStates;
-
-    private final int mDotSize;
-    private final int mDotSizeActivated;
-    private final int mPathWidth;
-
-    private boolean mDrawingProfilingStarted = false;
-
-    private Paint mPaint = new Paint();
-    private Paint mPathPaint = new Paint();
-
+    // be minimum of (w,h)
     /**
      * How many milliseconds we spend animating each circle of a lock pattern if the animating mode is set. The entire
      * animation should take this constant * the length of the pattern to complete.
      */
     private static final int MILLIS_PER_CIRCLE_ANIMATING = 700;
-
     /**
      * This can be used to avoid updating the display for very small motions or noisy panels. It didn't seem to have
      * much impact on the devices tested, so currently set to 0.
      */
     private static final float DRAG_THRESHHOLD = 0.0f;
-
+    private final CellState[][] mCellStates;
+    private final int mDotSize;
+    private final int mDotSizeActivated;
+    private final int mPathWidth;
+    private final Path mCurrentPath = new Path();
+    private final Rect mInvalidate = new Rect();
+    private final Rect mTmpInvalidateRect = new Rect();
+    private boolean mDrawingProfilingStarted = false;
+    private Paint mPaint = new Paint();
+    private Paint mPathPaint = new Paint();
     private OnPatternListener mOnPatternListener;
     private ArrayList<Cell> mPattern = new ArrayList<Cell>(MATRIX_SIZE);
 
@@ -305,30 +123,12 @@ public class LockPatternView extends View {
 
     private float mSquareWidth;
     private float mSquareHeight;
-
-    private final Path mCurrentPath = new Path();
-    private final Rect mInvalidate = new Rect();
-    private final Rect mTmpInvalidateRect = new Rect();
-
     private int mAspect;
     private int mRegularColor;
     private int mErrorColor;
     private int mSuccessColor;
-
     private Interpolator mFastOutSlowInInterpolator;
     private Interpolator mLinearOutSlowInInterpolator;
-
-    public static class CellState {
-
-        public float scale = 1.0f;
-        public float translateY = 0.0f;
-        public float alpha = 1.0f;
-        public float size;
-        public float lineEndX = Float.MIN_VALUE;
-        public float lineEndY = Float.MIN_VALUE;
-        public ValueAnimator lineAnimator;
-    }
-
     public LockPatternView(Context context) {
         this(context, null);
     }
@@ -428,13 +228,6 @@ public class LockPatternView extends View {
     }
 
     /**
-     * @return Whether the view has tactile feedback enabled.
-     */
-    public boolean isTactileFeedbackEnabled() {
-        return mEnableHapticFeedback;
-    }
-
-    /**
      * Set whether the view is in stealth mode. If {@code true}, there will be no visible feedback as the user enters
      * the pattern.
      *
@@ -442,6 +235,13 @@ public class LockPatternView extends View {
      */
     public void setInStealthMode(boolean inStealthMode) {
         mInStealthMode = inStealthMode;
+    }
+
+    /**
+     * @return Whether the view has tactile feedback enabled.
+     */
+    public boolean isTactileFeedbackEnabled() {
+        return mEnableHapticFeedback;
     }
 
     /**
@@ -1259,10 +1059,206 @@ public class LockPatternView extends View {
     }
 
     /**
+     * How to display the current pattern.
+     */
+    public enum DisplayMode {
+
+        /**
+         * The pattern drawn is correct (i.e draw it in a friendly color)
+         */
+        Correct,
+
+        /**
+         * Animate the pattern (for demo, and help).
+         */
+        Animate,
+
+        /**
+         * The pattern is wrong (i.e draw a foreboding color)
+         */
+        Wrong
+    }
+
+    /**
+     * The call back interface for detecting patterns entered by the user.
+     */
+    public interface OnPatternListener {
+
+        /**
+         * A new pattern has begun.
+         */
+        void onPatternStart();
+
+        /**
+         * The pattern was cleared.
+         */
+        void onPatternCleared();
+
+        /**
+         * The user extended the pattern currently being drawn by one cell.
+         *
+         * @param pattern The pattern with newly added cell.
+         */
+        void onPatternCellAdded(List<Cell> pattern);
+
+        /**
+         * A pattern was detected from the user.
+         *
+         * @param pattern The pattern.
+         */
+        void onPatternDetected(List<Cell> pattern);
+    }
+
+    /**
+     * Represents a cell in the MATRIX_WIDTH x MATRIX_WIDTH matrix of the unlock pattern view.
+     */
+    public static class Cell implements Parcelable {
+
+        public static final Creator<Cell> CREATOR = new Creator<Cell>() {
+
+            public Cell createFromParcel(Parcel in) {
+                return new Cell(in);
+            }// createFromParcel()
+
+            public Cell[] newArray(int size) {
+                return new Cell[size];
+            }// newArray()
+        };// CREATOR
+        /*
+         * keep # objects limited to MATRIX_SIZE
+         */
+        static Cell[][] sCells = new Cell[MATRIX_WIDTH][MATRIX_WIDTH];
+
+        static {
+            for (int i = 0; i < MATRIX_WIDTH; i++) {
+                for (int j = 0; j < MATRIX_WIDTH; j++) {
+                    sCells[i][j] = new Cell(i, j);
+                }
+            }
+        }
+
+        /**
+         * Row.
+         */
+        public final int row;
+        /**
+         * Column.
+         */
+        public final int column;
+
+        /**
+         * @param row    The row of the cell.
+         * @param column The column of the cell.
+         */
+        private Cell(int row, int column) {
+            checkRange(row, column);
+            this.row = row;
+            this.column = column;
+        }
+
+        private Cell(Parcel in) {
+            column = in.readInt();
+            row = in.readInt();
+        }// Cell()
+
+        /**
+         * @param row    The row of the cell.
+         * @param column The column of the cell.
+         */
+        public static synchronized Cell of(int row, int column) {
+            checkRange(row, column);
+            return sCells[row][column];
+        }
+
+        /**
+         * Gets a cell from its ID.
+         *
+         * @param id the cell ID.
+         * @return the cell.
+         * @author Hai Bison
+         * @since v2.7 beta
+         */
+        public static synchronized Cell of(int id) {
+            return of(id / MATRIX_WIDTH, id % MATRIX_WIDTH);
+        }// of()
+
+        private static void checkRange(int row, int column) {
+            if (row < 0 || row > MATRIX_WIDTH - 1) {
+                throw new IllegalArgumentException("row must be in range 0-"
+                        + (MATRIX_WIDTH - 1));
+            }
+            if (column < 0 || column > MATRIX_WIDTH - 1) {
+                throw new IllegalArgumentException("column must be in range 0-"
+                        + (MATRIX_WIDTH - 1));
+            }
+        }
+
+        /**
+         * Gets the ID.It is counted from left to right, top to bottom of the matrix, starting by zero.
+         *
+         * @return the ID.
+         */
+        public int getId() {
+            return row * MATRIX_WIDTH + column;
+        }// getId()
+
+        /*
+         * PARCELABLE
+         */
+
+        @Override
+        public String toString() {
+            return "(ROW=" + row + ",COL=" + column + ")";
+        }// toString()
+
+        @Override
+        public boolean equals(Object object) {
+            if (object instanceof Cell)
+                return column == ((Cell) object).column
+                        && row == ((Cell) object).row;
+            return super.equals(object);
+        }// equals()
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }// describeContents()
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(column);
+            dest.writeInt(row);
+        }// writeToParcel()
+
+    }// Cell
+
+    public static class CellState {
+
+        public float scale = 1.0f;
+        public float translateY = 0.0f;
+        public float alpha = 1.0f;
+        public float size;
+        public float lineEndX = Float.MIN_VALUE;
+        public float lineEndY = Float.MIN_VALUE;
+        public ValueAnimator lineAnimator;
+    }
+
+    /**
      * The parecelable for saving and restoring a lock pattern view.
      */
     private static class SavedState extends BaseSavedState {
 
+        @SuppressWarnings("unused")
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
         private final String mSerializedPattern;
         private final int mDisplayMode;
         private final boolean mInputEnabled;
@@ -1324,18 +1320,6 @@ public class LockPatternView extends View {
             dest.writeValue(mInStealthMode);
             dest.writeValue(mTactileFeedbackEnabled);
         }
-
-        @SuppressWarnings("unused")
-        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
     }
 
 }

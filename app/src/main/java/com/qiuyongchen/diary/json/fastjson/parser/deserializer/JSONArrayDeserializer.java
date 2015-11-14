@@ -1,10 +1,10 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-
 import com.qiuyongchen.diary.json.fastjson.JSONArray;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
+import java.lang.reflect.Type;
 
 public class JSONArrayDeserializer implements ObjectDeserializer {
     public final static JSONArrayDeserializer instance = new JSONArrayDeserializer();

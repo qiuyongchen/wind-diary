@@ -1,6 +1,5 @@
 package com.qiuyongchen.diary.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -12,8 +11,6 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.qiuyongchen.diary.R;
-import com.qiuyongchen.diary.SettingActivity;
-import com.qiuyongchen.diary.StatisticsActivity;
 
 import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 
@@ -34,9 +31,7 @@ public class FragmentView extends Fragment implements AbsListView.OnScrollListen
     private View.OnClickListener onClickListenerFabStatistics = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(null, null,
-                    getActivity(), StatisticsActivity.class);
-            startActivity(intent);
+
         }
     };
 

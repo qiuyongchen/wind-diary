@@ -1,9 +1,9 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+
 import java.lang.reflect.Type;
 import java.util.Map;
-
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
 
 @SuppressWarnings("rawtypes")
 public final class MapResolveFieldDeserializer extends FieldDeserializer {
@@ -26,10 +26,5 @@ public final class MapResolveFieldDeserializer extends FieldDeserializer {
     @Override
     public void parseField(DefaultJSONParser parser, Object object, Type objectType, Map<String, Object> fieldValues) {
 
-    }
-
-    @Override
-    public int getFastMatchToken() {
-        return 0;
     }
 }

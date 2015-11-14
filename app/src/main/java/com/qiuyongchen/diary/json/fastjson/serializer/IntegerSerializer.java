@@ -40,14 +40,5 @@ public class IntegerSerializer implements ObjectSerializer {
         }
         
         out.writeInt(value.intValue());
-        
-        if (serializer.isEnabled(SerializerFeature.WriteClassName)) {
-            Class<?> clazz = object.getClass();
-            if (clazz == byte.class || clazz == Byte.class) {
-                out.write('B');
-            } else if (clazz == short.class || clazz == Short.class) {
-                out.write('S');
-            }
-        }
     }
 }

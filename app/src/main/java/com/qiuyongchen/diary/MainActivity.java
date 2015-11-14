@@ -21,8 +21,8 @@ import com.qiuyongchen.diary.fragments.FragmentView;
 import com.qiuyongchen.diary.fragments.FragmentWriteOff;
 import com.qiuyongchen.diary.fragments.MyFragmentPageChangeListener;
 import com.qiuyongchen.diary.fragments.MyFragmentPagerAdapter;
-import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 import com.qiuyongchen.diary.widget.lockPattern.LockPatternActivity;
+import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -123,21 +123,6 @@ public class MainActivity extends FragmentActivity {
 
         Log.i(Integer.toString(mDPI), Integer.toString(mTabWidget));
         Log.i("ActivityMain", "initView()");
-    }
-
-    public void OnClickNight(View view) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (isNight) {
-            setTheme(R.style.AppTheme_Night);
-            isNight = false;
-        } else {
-            setTheme(R.style.AppTheme);
-            isNight = true;
-        }
-        editor.putBoolean("isNight", isNight);
-        editor.commit();
-
-        recreate();
     }
 
     @Override

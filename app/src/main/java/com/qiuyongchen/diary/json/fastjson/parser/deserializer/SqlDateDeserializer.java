@@ -1,14 +1,14 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.util.Date;
-
 import com.qiuyongchen.diary.json.fastjson.JSONException;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
+import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 
 public class SqlDateDeserializer extends AbstractDateDeserializer implements ObjectDeserializer {
 
@@ -20,10 +20,10 @@ public class SqlDateDeserializer extends AbstractDateDeserializer implements Obj
             return null;
         }
 
-        if (val instanceof Date) {
+        if (val instanceof java.util.Date) {
             val = new java.sql.Date(((Date) val).getTime());
         } else if (val instanceof Number) {
-            val = (T) new java.sql.Date(((Number) val).longValue());
+            val = new java.sql.Date(((Number) val).longValue());
         } else if (val instanceof String) {
             String strVal = (String) val;
             if (strVal.length() == 0) {
@@ -33,19 +33,24 @@ public class SqlDateDeserializer extends AbstractDateDeserializer implements Obj
             long longVal;
 
             JSONScanner dateLexer = new JSONScanner(strVal);
-            if (dateLexer.scanISO8601DateIfMatch()) {
-                longVal = dateLexer.getCalendar().getTimeInMillis();
-            } else {
+            try {
+                if (dateLexer.scanISO8601DateIfMatch()) {
+                    longVal = dateLexer.getCalendar().getTimeInMillis();
+                } else {
 
-                DateFormat dateFormat = parser.getDateFormat();
-                try {
-                    Date date = (Date) dateFormat.parse(strVal);
-                    return (T) new java.sql.Date(date.getTime());
-                } catch (ParseException e) {
-                    // skip
+                    DateFormat dateFormat = parser.getDateFormat();
+                    try {
+                        java.util.Date date = dateFormat.parse(strVal);
+                        java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+                        return (T) sqlDate;
+                    } catch (ParseException e) {
+                        // skip
+                    }
+
+                    longVal = Long.parseLong(strVal);
                 }
-
-                longVal = Long.parseLong(strVal);
+            } finally {
+                dateLexer.close();
             }
             return (T) new java.sql.Date(longVal);
         } else {

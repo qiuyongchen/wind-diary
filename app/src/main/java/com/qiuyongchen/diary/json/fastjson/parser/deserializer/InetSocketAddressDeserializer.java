@@ -1,13 +1,13 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
 import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
 
 public class InetSocketAddressDeserializer implements ObjectDeserializer {
 
@@ -15,7 +15,7 @@ public class InetSocketAddressDeserializer implements ObjectDeserializer {
 
     @SuppressWarnings("unchecked")
     public <T> T deserialze(DefaultJSONParser parser, Type clazz, Object fieldName) {
-        JSONScanner lexer = parser.getLexer();
+        JSONLexer lexer = parser.getLexer();
 
         if (lexer.token() == JSONToken.NULL) {
             lexer.nextToken();
@@ -27,8 +27,9 @@ public class InetSocketAddressDeserializer implements ObjectDeserializer {
         InetAddress address = null;
         int port = 0;
         for (;;) {
-            String key = lexer.symbol(parser.getSymbolTable());
-            lexer.nextToken();
+            String key = lexer.stringVal();
+            lexer.nextToken(JSONToken.COLON);
+           
 
             if (key.equals("address")) {
                 parser.accept(JSONToken.COLON);

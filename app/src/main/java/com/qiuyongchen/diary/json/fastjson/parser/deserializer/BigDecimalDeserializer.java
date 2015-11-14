@@ -1,25 +1,20 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
 import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
 
 public class BigDecimalDeserializer implements ObjectDeserializer {
 
     public final static BigDecimalDeserializer instance = new BigDecimalDeserializer();
 
     @SuppressWarnings("unchecked")
-    public <T> T deserialze(DefaultJSONParser parser, Type clazz, Object fieldName) {
-        return (T) deserialze(parser);
-    }
-
-    @SuppressWarnings("unchecked")
     public static <T> T deserialze(DefaultJSONParser parser) {
-        final JSONScanner lexer = parser.getLexer();
+        final JSONLexer lexer = parser.getLexer();
         if (lexer.token() == JSONToken.LITERAL_INT) {
             long val = lexer.longValue();
             lexer.nextToken(JSONToken.COMMA);
@@ -39,6 +34,11 @@ public class BigDecimalDeserializer implements ObjectDeserializer {
         }
 
         return (T) TypeUtils.castToBigDecimal(value);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T deserialze(DefaultJSONParser parser, Type clazz, Object fieldName) {
+        return (T) deserialze(parser);
     }
 
     public int getFastMatchToken() {

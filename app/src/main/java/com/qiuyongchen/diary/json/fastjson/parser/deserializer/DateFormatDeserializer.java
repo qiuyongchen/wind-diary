@@ -1,11 +1,11 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-
 import com.qiuyongchen.diary.json.fastjson.JSONException;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 
 public class DateFormatDeserializer extends AbstractDateDeserializer implements ObjectDeserializer {
 
@@ -13,6 +13,10 @@ public class DateFormatDeserializer extends AbstractDateDeserializer implements 
 
     @SuppressWarnings("unchecked")
     protected <T> T cast(DefaultJSONParser parser, Type clazz, Object fieldName, Object val) {
+
+        if (val == null) {
+            return null;
+        }
 
         if (val instanceof String) {
             String strVal = (String) val;
@@ -27,6 +31,6 @@ public class DateFormatDeserializer extends AbstractDateDeserializer implements 
     }
 
     public int getFastMatchToken() {
-        return JSONToken.LITERAL_INT;
+        return JSONToken.LITERAL_STRING;
     }
 }

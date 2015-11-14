@@ -18,9 +18,9 @@ package com.qiuyongchen.diary.widget.lockPattern.utils;
 
 import android.os.Handler;
 
-import java.util.List;
-
 import com.qiuyongchen.diary.widget.lockPattern.collect.Lists;
+
+import java.util.List;
 
 /**
  * Float animator.
@@ -30,80 +30,15 @@ import com.qiuyongchen.diary.widget.lockPattern.collect.Lists;
 public class FloatAnimator {
 
     /**
-     * Event listener.
-     *
-     * @author Hai Bison
-     */
-    public interface EventListener {
-
-        /**
-         * Will be called when animation starts.
-         *
-         * @param animator the animator.
-         */
-        void onAnimationStart(FloatAnimator animator);
-
-        /**
-         * Will be called when new animated value is calculated.
-         *
-         * @param animator the animator.
-         */
-        void onAnimationUpdate(FloatAnimator animator);
-
-        /**
-         * Will be called when animation cancels.
-         *
-         * @param animator the animator.
-         */
-        void onAnimationCancel(FloatAnimator animator);
-
-        /**
-         * Will be called when animation ends.
-         *
-         * @param animator the animator.
-         */
-        void onAnimationEnd(FloatAnimator animator);
-
-    }// EventListener
-
-    /**
-     * Simple event listener.
-     *
-     * @author Hai Bison
-     */
-    public static class SimpleEventListener implements EventListener {
-
-        @Override
-        public void onAnimationStart(FloatAnimator animator) {
-        }
-
-        @Override
-        public void onAnimationUpdate(FloatAnimator animator) {
-        }
-
-        @Override
-        public void onAnimationCancel(FloatAnimator animator) {
-        }
-
-        @Override
-        public void onAnimationEnd(FloatAnimator animator) {
-        }
-
-    }// SimpleEventListener
-
-    /**
      * Animation delay, in milliseconds.
      */
     private static final long ANIMATION_DELAY = 1;
-
     private final float mStartValue, mEndValue;
     private final long mDuration;
     private float mAnimatedValue;
-
     private List<EventListener> mEventListeners;
     private Handler mHandler;
     private long mStartTime;
-
     /**
      * Creates new instance.
      *
@@ -231,5 +166,67 @@ public class FloatAnimator {
                 listener.onAnimationEnd(this);
         }// if
     }// notifyAnimationEnd()
+
+    /**
+     * Event listener.
+     *
+     * @author Hai Bison
+     */
+    public interface EventListener {
+
+        /**
+         * Will be called when animation starts.
+         *
+         * @param animator the animator.
+         */
+        void onAnimationStart(FloatAnimator animator);
+
+        /**
+         * Will be called when new animated value is calculated.
+         *
+         * @param animator the animator.
+         */
+        void onAnimationUpdate(FloatAnimator animator);
+
+        /**
+         * Will be called when animation cancels.
+         *
+         * @param animator the animator.
+         */
+        void onAnimationCancel(FloatAnimator animator);
+
+        /**
+         * Will be called when animation ends.
+         *
+         * @param animator the animator.
+         */
+        void onAnimationEnd(FloatAnimator animator);
+
+    }// EventListener
+
+    /**
+     * Simple event listener.
+     *
+     * @author Hai Bison
+     */
+    public static class SimpleEventListener implements EventListener {
+
+        @Override
+        public void onAnimationStart(FloatAnimator animator) {
+        }
+
+        @Override
+        public void onAnimationUpdate(FloatAnimator animator) {
+        }
+
+        @Override
+        public void onAnimationCancel(FloatAnimator animator) {
+        }
+
+        @Override
+        public void onAnimationEnd(FloatAnimator animator) {
+        }
+
+    }// SimpleEventListener
 
 }

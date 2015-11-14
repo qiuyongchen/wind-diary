@@ -7,6 +7,8 @@ import java.util.List;
 public class TypeReference<T> {
 
     private final Type type;
+    public final static Type LIST_STRING = new TypeReference<List<String>>() {
+    }.getType();
 
     protected TypeReference(){
         Type superClass = getClass().getGenericSuperclass();
@@ -17,6 +19,4 @@ public class TypeReference<T> {
     public Type getType() {
         return type;
     }
-    
-    public final static Type LIST_STRING = new TypeReference<List<String>>() {}.getType();
 }

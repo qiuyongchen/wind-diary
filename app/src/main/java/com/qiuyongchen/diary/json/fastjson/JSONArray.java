@@ -15,6 +15,19 @@
  */
 package com.qiuyongchen.diary.json.fastjson;
 
+import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
+import java.io.Serializable;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.RandomAccess;
+
 import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBigDecimal;
 import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBigInteger;
 import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBoolean;
@@ -29,28 +42,15 @@ import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToSqlDate;
 import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToString;
 import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToTimestamp;
 
-import java.io.Serializable;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.RandomAccess;
-
-import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
-
 /**
  * @author wenshao<szujobs@hotmail.com>
  */
 public class JSONArray extends JSON implements List<Object>, JSONAware, Cloneable, RandomAccess, Serializable {
 
-    private static final long    serialVersionUID = 1L;
-    private final List<Object>   list;
+    private static final long serialVersionUID = 1L;
+    private final List<Object> list;
     protected transient Object relatedArray;
-    protected transient Type     componentType;
+    protected transient Type componentType;
 
     public JSONArray(){
         this.list = new ArrayList<Object>(10);
@@ -314,7 +314,7 @@ public class JSONArray extends JSON implements List<Object>, JSONAware, Cloneabl
             return 0D;
         }
 
-        return castToDouble(value).doubleValue();
+        return castToDouble(value);
     }
 
     public BigDecimal getBigDecimal(int index) {

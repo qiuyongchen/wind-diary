@@ -15,6 +15,8 @@
  */
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSON;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -39,9 +41,11 @@ public class DateFormatSerializer implements ObjectSerializer {
         if (out.isEnabled(SerializerFeature.WriteClassName)) {
             if (object.getClass() != fieldType) {
                 out.write('{');
-                out.writeFieldName("@type");
+                out.writeFieldName(JSON.DEFAULT_TYPE_KEY);
                 serializer.write(object.getClass().getName());
-                out.writeFieldValue(',', "val", pattern);
+                out.write(',');
+                out.writeFieldName("val");
+                out.writeString(pattern);
                 out.write('}');
                 return;
             }

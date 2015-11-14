@@ -1,12 +1,12 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-
 import com.qiuyongchen.diary.json.fastjson.JSONException;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
 import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
+import java.lang.reflect.Type;
 
 public class ClassDerializer implements ObjectDeserializer {
 
@@ -17,7 +17,7 @@ public class ClassDerializer implements ObjectDeserializer {
 
     @SuppressWarnings("unchecked")
     public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
-        JSONScanner lexer = parser.getLexer();
+        JSONLexer lexer = parser.getLexer();
         
         if (lexer.token() == JSONToken.NULL) {
             lexer.nextToken();

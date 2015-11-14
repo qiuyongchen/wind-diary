@@ -1,5 +1,19 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSON;
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.JSONObject;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser.ResolveTask;
+import com.qiuyongchen.diary.json.fastjson.parser.Feature;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+import com.qiuyongchen.diary.json.fastjson.parser.ParseContext;
+import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
+import com.qiuyongchen.diary.json.fastjson.util.DeserializeBeanInfo;
+import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
+import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
@@ -9,19 +23,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.JSONObject;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser.ResolveTask;
-import com.qiuyongchen.diary.json.fastjson.parser.Feature;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
-import com.qiuyongchen.diary.json.fastjson.parser.ParseContext;
-import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
-import com.qiuyongchen.diary.json.fastjson.util.DeserializeBeanInfo;
-import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
-import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
-
 public class JavaBeanDeserializer implements ObjectDeserializer {
 
     private final Map<String, FieldDeserializer> feildDeserializerMap = new IdentityHashMap<String, FieldDeserializer>();
@@ -29,15 +30,8 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
     private final List<FieldDeserializer>        fieldDeserializers   = new ArrayList<FieldDeserializer>();
 
     private final Class<?>                       clazz;
-    private final Type                           type;
 
     private DeserializeBeanInfo                  beanInfo;
-
-    public JavaBeanDeserializer(DeserializeBeanInfo beanInfo){
-        this.beanInfo = beanInfo;
-        this.clazz = beanInfo.getClass();
-        this.type = beanInfo.getType();
-    }
 
     public JavaBeanDeserializer(ParserConfig config, Class<?> clazz){
         this(config, clazz, clazz);
@@ -45,7 +39,6 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
 
     public JavaBeanDeserializer(ParserConfig config, Class<?> clazz, Type type){
         this.clazz = clazz;
-        this.type = type;
 
         beanInfo = DeserializeBeanInfo.computeSetters(clazz, type);
 
@@ -54,16 +47,8 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
         }
     }
 
-    public Type getType() {
-        return type;
-    }
-
     public Map<String, FieldDeserializer> getFieldDeserializerMap() {
         return feildDeserializerMap;
-    }
-
-    public Class<?> getClazz() {
-        return clazz;
     }
 
     private void addFieldDeserializer(ParserConfig mapping, Class<?> clazz, FieldInfo fieldInfo) {
@@ -119,9 +104,13 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
         return object;
     }
 
-    @SuppressWarnings("unchecked")
     public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
-        JSONScanner lexer = (JSONScanner) parser.getLexer(); // xxx
+        return deserialze(parser, type, fieldName, null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName, Object object) {
+        JSONLexer lexer = parser.getLexer(); // xxx
 
         if (lexer.token() == JSONToken.NULL) {
             lexer.nextToken(JSONToken.COMMA);
@@ -129,29 +118,34 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
         }
 
         ParseContext context = parser.getContext();
+        if (object != null) {
+            context = context.getParentContext();
+        }
         ParseContext childContext = null;
-        Object object = null;
 
         try {
             Map<String, Object> fieldValues = null;
 
             if (lexer.token() == JSONToken.RBRACE) {
                 lexer.nextToken(JSONToken.COMMA);
-                return (T) createInstance(parser, type);
+                if (object == null) {
+                    object = createInstance(parser, type);
+                }
+                return (T) object;
             }
 
             if (lexer.token() != JSONToken.LBRACE && lexer.token() != JSONToken.COMMA) {
-            	StringBuffer buf = (new StringBuffer()) //
-            			.append("syntax error, expect {, actual ") //
-            			.append(lexer.tokenName()) //
-            			.append(", pos ") //
-            			.append(lexer.pos()) //
-            			;
-            	if (fieldName instanceof String) {
-            		buf //
-            		.append(", fieldName ") //
-            		.append(fieldName);
-            	}
+                StringBuffer buf = (new StringBuffer()) //
+                        .append("syntax error, expect {, actual ") //
+                        .append(lexer.tokenName()) //
+                        .append(", pos ") //
+                        .append(lexer.pos()) //
+                        ;
+                if (fieldName instanceof String) {
+                    buf //
+                            .append(", fieldName ") //
+                            .append(fieldName);
+                }
                 throw new JSONException(buf.toString());
             }
 
@@ -215,12 +209,12 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
                     }
                     lexer.nextToken(JSONToken.COMMA);
 
-                    childContext = parser.setContext(context, object, fieldName);
+                    parser.setContext(context, object, fieldName);
 
                     return (T) object;
                 }
 
-                if ("@type" == key) {
+                if (JSON.DEFAULT_TYPE_KEY == key) {
                     lexer.nextTokenWithColon(JSONToken.LITERAL_STRING);
                     if (lexer.token() == JSONToken.LITERAL_STRING) {
                         String typeName = lexer.stringVal();
@@ -316,9 +310,10 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
 
     public boolean parseField(DefaultJSONParser parser, String key, Object object, Type objectType,
                               Map<String, Object> fieldValues) {
-        JSONScanner lexer = (JSONScanner) parser.getLexer(); // xxx
+        JSONLexer lexer = parser.getLexer(); // xxx
 
         FieldDeserializer fieldDeserializer = feildDeserializerMap.get(key);
+
         if (fieldDeserializer == null) {
             for (Map.Entry<String, FieldDeserializer> entry : feildDeserializerMap.entrySet()) {
                 if (entry.getKey().equalsIgnoreCase(key)) {
@@ -327,6 +322,7 @@ public class JavaBeanDeserializer implements ObjectDeserializer {
                 }
             }
         }
+
         if (fieldDeserializer == null) {
             if (!parser.isEnabled(Feature.IgnoreNotMatch)) {
                 throw new JSONException("setter not found, class " + clazz.getName() + ", property " + key);

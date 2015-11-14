@@ -1,13 +1,13 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSONArray;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
-
-import com.qiuyongchen.diary.json.fastjson.JSONArray;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
 
 @SuppressWarnings("rawtypes")
 public final class ListResolveFieldDeserializer extends FieldDeserializer {
@@ -47,17 +47,8 @@ public final class ListResolveFieldDeserializer extends FieldDeserializer {
         }
     }
 
-    public DefaultJSONParser getParser() {
-        return parser;
-    }
-
-    @Override
     public void parseField(DefaultJSONParser parser, Object object, Type objectType, Map<String, Object> fieldValues) {
 
     }
 
-    @Override
-    public int getFastMatchToken() {
-        return 0;
-    }
 }

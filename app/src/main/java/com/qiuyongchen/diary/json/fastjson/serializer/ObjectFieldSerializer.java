@@ -15,25 +15,24 @@
  */
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
-import java.util.Collection;
-
 import com.qiuyongchen.diary.json.fastjson.annotation.JSONField;
 import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
+
+import java.util.Collection;
 
 /**
  * @author wenshao<szujobs@hotmail.com>
  */
 public class ObjectFieldSerializer extends FieldSerializer {
 
-    private ObjectSerializer fieldSerializer;
-
-    private Class<?>         runtimeFieldClass;
-    private String           format;
-    private boolean          writeNumberAsZero       = false;
     boolean                  writeNullStringAsEmpty  = false;
     boolean                  writeNullBooleanAsFalse = false;
     boolean                  writeNullListAsEmpty    = false;
     boolean                  writeEnumUsingToString  = false;
+    private ObjectSerializer fieldSerializer;
+    private Class<?> runtimeFieldClass;
+    private String format;
+    private boolean writeNumberAsZero = false;
 
     public ObjectFieldSerializer(FieldInfo fieldInfo){
         super(fieldInfo);
@@ -73,9 +72,8 @@ public class ObjectFieldSerializer extends FieldSerializer {
         }
 
         if (fieldSerializer == null) {
-
             if (propertyValue == null) {
-                runtimeFieldClass = this.getMethod().getReturnType();
+                runtimeFieldClass = this.fieldInfo.getFieldClass();
             } else {
                 runtimeFieldClass = propertyValue.getClass();
             }
@@ -114,7 +112,7 @@ public class ObjectFieldSerializer extends FieldSerializer {
         }
 
         ObjectSerializer valueSerializer = serializer.getObjectWriter(valueClass);
-        valueSerializer.write(serializer, propertyValue, fieldInfo.getName(), null);
+        valueSerializer.write(serializer, propertyValue, fieldInfo.getName(), fieldInfo.getFieldType());
     }
 
 }

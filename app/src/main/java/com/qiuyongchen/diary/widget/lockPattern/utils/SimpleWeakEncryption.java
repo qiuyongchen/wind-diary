@@ -44,17 +44,15 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class SimpleWeakEncryption {
 
+    public static final String UTF8 = "UTF-8";
+    public static final String SHA256 = "SHA-256";
     private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
     private static final String SECRET_KEY_FACTORY_ALGORITHM = "PBEWithMD5AndDES";
     private static final String SECRET_KEY_SPEC_ALGORITHM = "AES";
-
     private static final int KEY_LEN = 256;
     private static final int IV_LEN = 16;
     private static final int ITERATION_COUNT = 512;
     private static final char SEPARATOR = '@';
-
-    public static final String UTF8 = "UTF-8";
-    public static final String SHA256 = "SHA-256";
 
     /**
      * This is singleton class.

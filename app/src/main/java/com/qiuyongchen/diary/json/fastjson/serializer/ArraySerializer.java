@@ -16,7 +16,6 @@
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 
 /**
@@ -25,77 +24,52 @@ import java.lang.reflect.Type;
 public class ArraySerializer implements ObjectSerializer {
 
 	private final Class<?> componentType;
-	private final ObjectSerializer compObjectSerializer;
+    private final ObjectSerializer compObjectSerializer;
 
-	public ArraySerializer(Class<?> componentType,
-			ObjectSerializer compObjectSerializer) {
-		this.componentType = componentType;
-		this.compObjectSerializer = compObjectSerializer;
-	}
+    public ArraySerializer(Class<?> componentType, ObjectSerializer compObjectSerializer) {
+        this.componentType = componentType;
+        this.compObjectSerializer = compObjectSerializer;
+    }
 
-	public final void write(JSONSerializer serializer, Object object,
-			Object fieldName, Type fieldType) throws IOException {
-		SerializeWriter out = serializer.getWriter();
+    public final void write(JSONSerializer serializer, Object object, Object fieldName, Type fieldType)
+            throws IOException {
+        SerializeWriter out = serializer.getWriter();
 
-		if (object == null) {
-			if (out.isEnabled(SerializerFeature.WriteNullListAsEmpty)) {
-				out.write("[]");
-			} else {
-				out.writeNull();
-			}
-			return;
-		}
-		SerialContext context = serializer.getContext();
-		serializer.setContext(context, object, fieldName);
+        if (object == null) {
+            if (out.isEnabled(SerializerFeature.WriteNullListAsEmpty)) {
+                out.write("[]");
+            } else {
+                out.writeNull();
+            }
+            return;
+        }
 
+        Object[] array = (Object[]) object;
+        int size = array.length;
 
+        SerialContext context = serializer.getContext();
+        serializer.setContext(context, object, fieldName);
 
-		try {
-			out.append('[');
-			
-			if (!(object instanceof Object[])) {
-				int size = Array.getLength(object);
-				for (int i = 0; i < size; ++i) {
-					if (i != 0) {
-						out.append(',');
-					}
-					Object item = Array.get(object, i);
+        try {
+            out.append('[');
+            for (int i = 0; i < size; ++i) {
+                if (i != 0) {
+                    out.append(',');
+                }
+                Object item = array[i];
 
-					if (item == null) {
-						out.append("null");
-					} else if (item.getClass() == componentType) {
-						compObjectSerializer.write(serializer, item, i, null);
-					} else {
-						ObjectSerializer itemSerializer = serializer
-								.getObjectWriter(item.getClass());
-						itemSerializer.write(serializer, item, i, null);
-					}
-				}
-			} else {
-				Object[] array = (Object[]) object;
-				int size = array.length;
-				for (int i = 0; i < size; ++i) {
-					if (i != 0) {
-						out.append(',');
-					}
-					Object item = array[i];
-
-					if (item == null) {
-						out.append("null");
-					} else if (item.getClass() == componentType) {
-						compObjectSerializer.write(serializer, item, i, null);
-					} else {
-						ObjectSerializer itemSerializer = serializer
-								.getObjectWriter(item.getClass());
-						itemSerializer.write(serializer, item, i, null);
-					}
-				}
-			}
-	
-			out.append(']');
-
-		} finally {
-			serializer.setContext(context);
-		}
-	}
+                if (item == null) {
+                    out.append("null");
+                } else if (item.getClass() == componentType) {
+                    compObjectSerializer.write(serializer, item, i, null);
+                } else {
+                    ObjectSerializer itemSerializer = serializer.getObjectWriter(item.getClass());
+                    itemSerializer.write(serializer, item, i, null);
+                }
+            }
+            out.append(']');
+        } finally {
+            serializer.setContext(context);
+        }
+    }
 }

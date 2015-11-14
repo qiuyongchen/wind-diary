@@ -1,13 +1,15 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser.ResolveTask;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+import com.qiuyongchen.diary.json.fastjson.parser.ParseContext;
 import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
 import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
+
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 public class DefaultFieldDeserializer extends FieldDeserializer {
 
@@ -21,6 +23,11 @@ public class DefaultFieldDeserializer extends FieldDeserializer {
     public void parseField(DefaultJSONParser parser, Object object, Type objectType, Map<String, Object> fieldValues) {
         if (fieldValueDeserilizer == null) {
             fieldValueDeserilizer = parser.getConfig().getDeserializer(fieldInfo);
+        }
+
+        if (objectType instanceof ParameterizedType) {
+            ParseContext objContext = parser.getContext();
+            objContext.setType(objectType);
         }
 
         Object value = fieldValueDeserilizer.deserialze(parser, getFieldType(), fieldInfo.getName());

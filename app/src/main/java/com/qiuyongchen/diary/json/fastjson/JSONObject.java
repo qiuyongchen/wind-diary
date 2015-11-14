@@ -15,19 +15,9 @@
  */
 package com.qiuyongchen.diary.json.fastjson;
 
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBigDecimal;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBigInteger;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBoolean;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToByte;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBytes;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToDate;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToDouble;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToFloat;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToInt;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToLong;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToShort;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToSqlDate;
-import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToTimestamp;
+import com.qiuyongchen.diary.json.fastjson.annotation.JSONField;
+import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
+import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
@@ -41,9 +31,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.qiuyongchen.diary.json.fastjson.annotation.JSONField;
-import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
-import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBigDecimal;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBigInteger;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBoolean;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToByte;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToBytes;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToDate;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToDouble;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToFloat;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToInt;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToLong;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToShort;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToSqlDate;
+import static com.qiuyongchen.diary.json.fastjson.util.TypeUtils.castToTimestamp;
 
 /**
  * @author wenshao<szujobs@hotmail.com>
@@ -247,7 +247,7 @@ public class JSONObject extends JSON implements Map<String, Object>, JSONAware, 
             return 0D;
         }
 
-        return castToDouble(value).doubleValue();
+        return castToDouble(value);
     }
 
     public BigDecimal getBigDecimal(String key) {
@@ -314,7 +314,7 @@ public class JSONObject extends JSON implements Map<String, Object>, JSONAware, 
         return map.values();
     }
 
-    public Set<Entry<String, Object>> entrySet() {
+    public Set<Map.Entry<String, Object>> entrySet() {
         return map.entrySet();
     }
 

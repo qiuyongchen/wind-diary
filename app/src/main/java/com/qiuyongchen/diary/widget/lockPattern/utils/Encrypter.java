@@ -18,9 +18,9 @@ package com.qiuyongchen.diary.widget.lockPattern.utils;
 
 import android.content.Context;
 
-import java.util.List;
-
 import com.qiuyongchen.diary.widget.lockPattern.widget.LockPatternView.Cell;
+
+import java.util.List;
 
 /**
  * Interface for encrypter.

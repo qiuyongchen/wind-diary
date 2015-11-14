@@ -64,6 +64,7 @@ public enum SerializerFeature {
     /**
      * @since 1.1.1
      */
+    @Deprecated
     WriteTabAsSpecial,
     /**
      * @since 1.1.2
@@ -103,21 +104,12 @@ public enum SerializerFeature {
      * @since 1.1.19
      */
     DisableCheckSpecialChar,
-    
-    /**
-     * @since 1.1.20
-     */
-    NonDefault,
     ;
-
-    private SerializerFeature(){
-        mask = (1 << ordinal());
-    }
 
     private final int mask;
 
-    public final int getMask() {
-        return mask;
+    SerializerFeature() {
+        mask = (1 << ordinal());
     }
 
     public static boolean isEnabled(int features, SerializerFeature feature) {
@@ -132,5 +124,9 @@ public enum SerializerFeature {
         }
 
         return features;
+    }
+
+    public final int getMask() {
+        return mask;
     }
 }

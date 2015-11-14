@@ -1,17 +1,16 @@
 package com.qiuyongchen.diary.json.fastjson.util;
 
 import java.lang.ref.SoftReference;
-import java.nio.charset.CharsetDecoder;
 
 public class ThreadLocalCache {
 
     public final static int                                 CHARS_CACH_INIT_SIZE = 1024;                                    // 1k;
     public final static int                                 CHARS_CACH_MAX_SIZE  = 1024 * 128;                              // 1k;
+    // /////////
+    public final static int BYTES_CACH_INIT_SIZE = 1024;                                    // 1k;
+    public final static int BYTeS_CACH_MAX_SIZE = 1024 * 128;                              // 1k;
     private final static ThreadLocal<SoftReference<char[]>> charsBufLocal        = new ThreadLocal<SoftReference<char[]>>();
-
-    public static CharsetDecoder getUTF8Decoder() {
-        return IOUtils.CHAR_SET_UTF8.newDecoder();
-    }
+    private final static ThreadLocal<SoftReference<byte[]>> bytesBufLocal = new ThreadLocal<SoftReference<byte[]>>();
 
     public static void clearChars() {
         charsBufLocal.set(null);
@@ -65,11 +64,6 @@ public class ThreadLocalCache {
 
         return length;
     }
-
-    // /////////
-    public final static int                                 BYTES_CACH_INIT_SIZE = 1024;                                    // 1k;
-    public final static int                                 BYTeS_CACH_MAX_SIZE  = 1024 * 128;                              // 1k;
-    private final static ThreadLocal<SoftReference<byte[]>> bytesBufLocal        = new ThreadLocal<SoftReference<byte[]>>();
 
     public static void clearBytes() {
         bytesBufLocal.set(null);

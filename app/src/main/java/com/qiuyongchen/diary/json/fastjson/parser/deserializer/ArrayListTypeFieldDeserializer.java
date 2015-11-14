@@ -1,20 +1,20 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.Feature;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+import com.qiuyongchen.diary.json.fastjson.parser.ParseContext;
+import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
+import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
-
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.Feature;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
-import com.qiuyongchen.diary.json.fastjson.parser.ParseContext;
-import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
-import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
 
 public class ArrayListTypeFieldDeserializer extends FieldDeserializer {
 
@@ -62,9 +62,11 @@ public class ArrayListTypeFieldDeserializer extends FieldDeserializer {
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public final void parseArray(DefaultJSONParser parser, Type objectType, Collection array) {
-        Type itemType = this.itemType;;
-        
-        if (itemType instanceof TypeVariable && objectType instanceof ParameterizedType) {
+        Type itemType = this.itemType;
+        ObjectDeserializer itemTypeDeser = this.deserializer;
+
+        if (itemType instanceof TypeVariable //
+                && objectType instanceof ParameterizedType) {
             TypeVariable typeVar = (TypeVariable) itemType;
             ParameterizedType paramType = (ParameterizedType) objectType;
 
@@ -86,17 +88,24 @@ public class ArrayListTypeFieldDeserializer extends FieldDeserializer {
 
             if (paramIndex != -1) {
                 itemType = paramType.getActualTypeArguments()[paramIndex];
+                if (!itemType.equals(this.itemType)) {
+                    itemTypeDeser = parser.getConfig().getDeserializer(itemType);
+                }
             }
         }
 
-        final JSONScanner lexer = parser.getLexer();
+        final JSONLexer lexer = parser.getLexer();
 
         if (lexer.token() != JSONToken.LBRACKET) {
-            throw new JSONException("exepct '[', but " + JSONToken.name(lexer.token()));
+            String errorMessage = "exepct '[', but " + JSONToken.name(lexer.token());
+            if (objectType != null) {
+                errorMessage += ", type : " + objectType;
+            }
+            throw new JSONException(errorMessage);
         }
 
-        if (deserializer == null) {
-            deserializer = parser.getConfig().getDeserializer(itemType);
+        if (itemTypeDeser == null) {
+            itemTypeDeser = deserializer = parser.getConfig().getDeserializer(itemType);
             itemFastMatchToken = deserializer.getFastMatchToken();
         }
 
@@ -114,7 +123,7 @@ public class ArrayListTypeFieldDeserializer extends FieldDeserializer {
                 break;
             }
 
-            Object val = deserializer.deserialze(parser, itemType, i);
+            Object val = itemTypeDeser.deserialze(parser, itemType, i);
             array.add(val);
 
             parser.checkListResolve(array);

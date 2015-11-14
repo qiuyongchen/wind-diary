@@ -1,14 +1,14 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
 import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
 import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
 import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
+import java.lang.reflect.Type;
+import java.util.Map;
 
 public class BooleanFieldDeserializer extends FieldDeserializer {
 
@@ -20,7 +20,7 @@ public class BooleanFieldDeserializer extends FieldDeserializer {
     public void parseField(DefaultJSONParser parser, Object object, Type objectType, Map<String, Object> fieldValues) {
         Boolean value;
 
-        final JSONScanner lexer = parser.getLexer();
+        final JSONLexer lexer = parser.getLexer();
         if (lexer.token() == JSONToken.TRUE) {
             lexer.nextToken(JSONToken.COMMA);
             if (object == null) {
@@ -52,7 +52,9 @@ public class BooleanFieldDeserializer extends FieldDeserializer {
                 return;
             }
 
-            setValue(object, null);
+            if (object != null) {
+                setValue(object, null);
+            }
             return;
         }
 

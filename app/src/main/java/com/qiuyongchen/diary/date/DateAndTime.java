@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by redleaf on 2015/10/24.
+ * Created by qiuyongchen on 2015/10/24.
  */
 public class DateAndTime {
     /**

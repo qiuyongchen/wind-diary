@@ -1,12 +1,12 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import com.qiuyongchen.diary.json.fastjson.JSONException;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
+import java.lang.reflect.Type;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class InetAddressDeserializer implements ObjectDeserializer {
 

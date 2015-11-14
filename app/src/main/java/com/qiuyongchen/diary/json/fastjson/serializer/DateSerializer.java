@@ -15,13 +15,15 @@
  */
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSON;
+import com.qiuyongchen.diary.json.fastjson.util.IOUtils;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import com.qiuyongchen.diary.json.fastjson.util.IOUtils;
 
 /**
  * @author wenshao<szujobs@hotmail.com>
@@ -40,14 +42,16 @@ public class DateSerializer implements ObjectSerializer {
 
         if (out.isEnabled(SerializerFeature.WriteClassName)) {
             if (object.getClass() != fieldType) {
-                if (object.getClass() == Date.class) {
+                if (object.getClass() == java.util.Date.class) {
                     out.write("new Date(");
                     out.writeLongAndChar(((Date) object).getTime(), ')');
                 } else {
                     out.write('{');
-                    out.writeFieldName("@type");
+                    out.writeFieldName(JSON.DEFAULT_TYPE_KEY);
                     serializer.write(object.getClass().getName());
-                    out.writeFieldValue(',', "val", ((Date) object).getTime());
+                    out.write(',');
+                    out.writeFieldName("val");
+                    out.writeLong(((Date) object).getTime());
                     out.write('}');
                 }
                 return;
@@ -58,6 +62,9 @@ public class DateSerializer implements ObjectSerializer {
         
         if (out.isEnabled(SerializerFeature.WriteDateUseDateFormat)) {
             DateFormat format = serializer.getDateFormat();
+            if (format == null) {
+                format = new SimpleDateFormat(JSON.DEFFAULT_DATE_FORMAT);
+            }
             String text = format.format(date);
             out.writeString(text);
             return;

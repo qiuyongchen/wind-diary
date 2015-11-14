@@ -1,5 +1,6 @@
 package com.qiuyongchen.diary;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,8 +15,8 @@ import android.widget.Toast;
 
 import com.qiuyongchen.diary.data.DataSourceDiary;
 import com.qiuyongchen.diary.data.DiaryItem;
-import com.qiuyongchen.diary.data.FileHelper;
 import com.qiuyongchen.diary.json.JsonCenter;
+import com.qiuyongchen.diary.util.FileUtil;
 import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class SettingActivity extends Activity {
             isNight = true;
         }
         editor.putBoolean("isNight", isNight);
-        editor.commit();
+        editor.apply();
         recreate();
     }
 
@@ -71,7 +72,7 @@ public class SettingActivity extends Activity {
     }
 
     public void OnClickExportToTxt(View view) {
-        exportDatabaseToTxts();
+        exportDatabaseToTxt();
 
         Toast.makeText(this, R.string.export_complete,
                 Toast.LENGTH_LONG).show();
@@ -116,6 +117,7 @@ public class SettingActivity extends Activity {
             );
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
@@ -128,15 +130,11 @@ public class SettingActivity extends Activity {
         win.setAttributes(winParams);
     }
 
-    private boolean exportDatabaseToTxts() {
-        String fileDirName = getString(R.string.file_dir_name);
+    public boolean exportDatabaseToTxt() {
+        String fileDirName = getString(R.string.file_dir_name).toString();
         DataSourceDiary mDataSourceDiary = new DataSourceDiary(
-                this.getApplicationContext());
+                this);
         ArrayList<DiaryItem> mArrayList = mDataSourceDiary.getAllDiary();
-        int sumDiarys = mArrayList.size();
-
-        FileHelper mFileHelper = new FileHelper();
-        mFileHelper.createDirOnSDCard(fileDirName);
 
         while (!mArrayList.isEmpty()) {
 
@@ -162,9 +160,8 @@ public class SettingActivity extends Activity {
                 }
             }
 
-            mFileHelper.writeToFileOnSDCard(date + ".txt", fileDirName,
-                    text);
-
+            FileUtil.writeToSDCardFile(fileDirName, date + ".txt",
+                    text, false);
         }
 
         return true;
@@ -174,7 +171,7 @@ public class SettingActivity extends Activity {
 
         // get the export ArrayList from database.
         DataSourceDiary mDataSourceDiary = new DataSourceDiary(
-                this);
+                this.getApplicationContext());
         ArrayList<DiaryItem> mArrayList = mDataSourceDiary.getAllDiary();
 
         // transfer ArrayList to json which is String form.
@@ -184,28 +181,19 @@ public class SettingActivity extends Activity {
         Log.i("export_json_to_sdcard",
                 "try to export "
                         + String.valueOf(mDataSourceDiary.getAllDiary()
-                        .size()) + "diary items into database");
+                        .size()) + " diary item(s) into database");
+
+        FileUtil.comprobarSDCard(this);
 
         // write json into the file in SD card.
-        FileHelper mFileHelper = new FileHelper();
-        mFileHelper.createDirOnSDCard(getString(R.string.file_dir_name)
-                .toString());
-        mFileHelper.writeToFileOnSDCard(
-                getString(R.string.export_to_local_json_file_name)
-                        .toString(), getString(R.string.file_dir_name)
-                        .toString(), json);
+        FileUtil.writeToSDCardFile(getString(R.string.file_dir_name), getString(R.string.export_to_local_json_file_name), json, false);
     }
 
     public boolean import_json_from_sdcard() {
 
         // get json from sd card
-        FileHelper mFileHelper = new FileHelper();
-        mFileHelper.createDirOnSDCard(getString(R.string.file_dir_name)
-                .toString());
-        String json = mFileHelper.readFromFileOnSDCard(
-                getString(R.string.export_to_local_json_file_name)
-                        .toString(), getString(R.string.file_dir_name)
-                        .toString());
+        String json = FileUtil.readFromSDCardFile(getString(R.string.file_dir_name),
+                getString(R.string.export_to_local_json_file_name));
 
         if (json == null || json == "")
             return false;
@@ -221,7 +209,7 @@ public class SettingActivity extends Activity {
 
         // insert all of these diaryitem got above into database
         DataSourceDiary mDataSourceDiary = new DataSourceDiary(
-                this);
+                this.getApplicationContext());
         mDataSourceDiary.importIntoDatabase(mArrayList);
 
         return true;

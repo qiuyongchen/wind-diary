@@ -1,5 +1,8 @@
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.util.ThreadLocalCache;
+
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -7,9 +10,6 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
-
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.util.ThreadLocalCache;
 
 public class SerialWriterStringEncoder {
 
@@ -21,6 +21,12 @@ public class SerialWriterStringEncoder {
 	
 	public SerialWriterStringEncoder(CharsetEncoder encoder) {
 	    this.encoder = encoder;
+	}
+
+	private static int scale(int len, float expansionFactor) {
+		// We need to perform double, not float, arithmetic; otherwise
+		// we lose low order bits when len is larger than 2**24.
+		return (int) (len * (double) expansionFactor);
 	}
 
 	public byte[] encode(char[] chars, int off, int len) {
@@ -64,12 +70,6 @@ public class SerialWriterStringEncoder {
 		byte[] copy = new byte[bytesLength];
 		System.arraycopy(bytes, 0, copy, 0, bytesLength);
 		return copy;
-	}
-
-	private static int scale(int len, float expansionFactor) {
-		// We need to perform double, not float, arithmetic; otherwise
-		// we lose low order bits when len is larger than 2**24.
-		return (int) (len * (double) expansionFactor);
 	}
 
 }

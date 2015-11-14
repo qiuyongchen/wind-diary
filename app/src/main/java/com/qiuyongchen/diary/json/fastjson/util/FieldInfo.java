@@ -18,19 +18,15 @@ public class FieldInfo implements Comparable<FieldInfo> {
     private final Class<?> fieldClass;
     private final Type     fieldType;
     private final Class<?> declaringClass;
+    private boolean getOnly = false;
 
-    public FieldInfo(String name, Class<?> declaringClass, Class<?> fieldClass, Type fieldType, Method method,
-                     Field field){
+    public FieldInfo(String name, Class<?> declaringClass, Class<?> fieldClass, Type fieldType, Field field) {
         this.name = name;
         this.declaringClass = declaringClass;
         this.fieldClass = fieldClass;
         this.fieldType = fieldType;
-        this.method = method;
+        this.method = null;
         this.field = field;
-
-        if (method != null) {
-            method.setAccessible(true);
-        }
 
         if (field != null) {
             field.setAccessible(true);
@@ -63,6 +59,7 @@ public class FieldInfo implements Comparable<FieldInfo> {
             } else {
                 fieldClass = method.getReturnType();
                 fieldType = method.getGenericReturnType();
+                getOnly = true;
             }
             this.declaringClass = method.getDeclaringClass();
         } else {
@@ -70,7 +67,7 @@ public class FieldInfo implements Comparable<FieldInfo> {
             fieldType = field.getGenericType();
             this.declaringClass = field.getDeclaringClass();
         }
-        
+
         if (clazz != null && fieldClass == Object.class && fieldType instanceof TypeVariable) {
             TypeVariable<?> tv = (TypeVariable<?>) fieldType;
             Type genericFieldType = getInheritGenericType(clazz, tv);
@@ -82,7 +79,7 @@ public class FieldInfo implements Comparable<FieldInfo> {
         }
 
         Type genericFieldType = getFieldType(clazz, type, fieldType);
-        
+
         if (genericFieldType != fieldType) {
             if (genericFieldType instanceof ParameterizedType) {
                 fieldClass = TypeUtils.getClass(genericFieldType);
@@ -111,14 +108,42 @@ public class FieldInfo implements Comparable<FieldInfo> {
             for (int i = 0; i < clazz.getTypeParameters().length; ++i) {
                 if (clazz.getTypeParameters()[i].getName().equals(typeVar.getName())) {
                     fieldType = paramType.getActualTypeArguments()[i];
-                    break;
+                    return fieldType;
                 }
+            }
+        }
+
+        if (fieldType instanceof ParameterizedType) {
+            ParameterizedType parameterizedFieldType = (ParameterizedType) fieldType;
+
+            Type[] arguments = parameterizedFieldType.getActualTypeArguments();
+            boolean changed = false;
+            for (int i = 0; i < arguments.length; ++i) {
+                Type feildTypeArguement = arguments[i];
+                if (feildTypeArguement instanceof TypeVariable) {
+                    TypeVariable<?> typeVar = (TypeVariable<?>) feildTypeArguement;
+
+                    if (type instanceof ParameterizedType) {
+                        ParameterizedType parameterizedType = (ParameterizedType) type;
+                        for (int j = 0; j < clazz.getTypeParameters().length; ++j) {
+                            if (clazz.getTypeParameters()[j].getName().equals(typeVar.getName())) {
+                                arguments[i] = parameterizedType.getActualTypeArguments()[j];
+                                changed = true;
+                            }
+                        }
+                    }
+                }
+            }
+            if (changed) {
+                fieldType = new ParameterizedTypeImpl(arguments, parameterizedFieldType.getOwnerType(),
+                        parameterizedFieldType.getRawType());
+                return fieldType;
             }
         }
 
         return fieldType;
     }
-    
+
     public static Type getInheritGenericType(Class<?> clazz, TypeVariable<?> tv) {
         Type type = null;
         GenericDeclaration gd = tv.getGenericDeclaration();
@@ -133,8 +158,7 @@ public class FieldInfo implements Comparable<FieldInfo> {
                     TypeVariable<?>[] tvs = gd.getTypeParameters();
                     Type[] types = ptype.getActualTypeArguments();
                     for (int i = 0; i < tvs.length; i++) {
-                        if (tvs[i] == tv)
-                            return types[i];
+                        if (tvs[i] == tv) return types[i];
                     }
                     return null;
                 }
@@ -193,7 +217,7 @@ public class FieldInfo implements Comparable<FieldInfo> {
 
     public Object get(Object javaObject) throws IllegalAccessException, InvocationTargetException {
         if (method != null) {
-            Object value = method.invoke(javaObject, new Object[0]);
+            Object value = method.invoke(javaObject);
             return value;
         }
 
@@ -202,7 +226,7 @@ public class FieldInfo implements Comparable<FieldInfo> {
 
     public void set(Object javaObject, Object value) throws IllegalAccessException, InvocationTargetException {
         if (method != null) {
-            method.invoke(javaObject, new Object[] { value });
+            method.invoke(javaObject, value);
             return;
         }
 
@@ -217,4 +241,9 @@ public class FieldInfo implements Comparable<FieldInfo> {
 
         field.setAccessible(flag);
     }
+
+    public boolean isGetOnly() {
+        return getOnly;
+    }
+
 }

@@ -18,7 +18,7 @@ package com.qiuyongchen.diary.json.fastjson.serializer;
 /**
  * @author wenshao<szujobs@hotmail.com>
  */
-public interface PropertyFilter {
+public interface PropertyFilter extends SerializeFilter {
 
     /**
      * @param source the owner of the property

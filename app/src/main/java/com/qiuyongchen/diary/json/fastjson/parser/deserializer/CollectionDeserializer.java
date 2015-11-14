@@ -1,5 +1,9 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.AbstractCollection;
@@ -7,10 +11,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+import java.util.TreeSet;
 
 public class CollectionDeserializer implements ObjectDeserializer {
 
@@ -32,6 +33,8 @@ public class CollectionDeserializer implements ObjectDeserializer {
             list = new HashSet();
         } else if (rawClass.isAssignableFrom(LinkedHashSet.class)) {
             list = new LinkedHashSet();
+        } else if (rawClass.isAssignableFrom(TreeSet.class)) {
+            list = new TreeSet();
         } else if (rawClass.isAssignableFrom(ArrayList.class)) {
             list = new ArrayList();
         } else {

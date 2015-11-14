@@ -15,17 +15,17 @@
  */
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
+import com.qiuyongchen.diary.json.fastjson.annotation.JSONField;
+import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import com.qiuyongchen.diary.json.fastjson.annotation.JSONField;
-import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
-
 /**
  * @author wenshao<szujobs@hotmail.com>
  */
-public abstract class FieldSerializer implements Comparable<FieldSerializer> {
+public abstract class FieldSerializer {
 
     protected final FieldInfo fieldInfo;
     private final String      double_quoted_fieldPrefix;
@@ -82,10 +82,6 @@ public abstract class FieldSerializer implements Comparable<FieldSerializer> {
         } else {
             out.write(un_quoted_fieldPrefix);
         }
-    }
-
-    public int compareTo(FieldSerializer o) {
-        return this.getName().compareTo(o.getName());
     }
 
     public Object getPropertyValue(Object object) throws Exception {

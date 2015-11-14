@@ -1,11 +1,12 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-
 import com.qiuyongchen.diary.json.fastjson.JSONException;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
+import java.lang.reflect.Type;
 
 public class TimeDeserializer implements ObjectDeserializer {
 
@@ -13,7 +14,7 @@ public class TimeDeserializer implements ObjectDeserializer {
 
     @SuppressWarnings("unchecked")
     public <T> T deserialze(DefaultJSONParser parser, Type clazz, Object fieldName) {
-        JSONScanner lexer = (JSONScanner) parser.getLexer();
+        JSONLexer lexer = parser.getLexer();
         
         if (lexer.token() == JSONToken.COMMA) {
             lexer.nextToken(JSONToken.LITERAL_STRING);
@@ -61,6 +62,7 @@ public class TimeDeserializer implements ObjectDeserializer {
             } else {
                 longVal = Long.parseLong(strVal);
             }
+            dateLexer.close();
             return (T) new java.sql.Time(longVal);
         }
         

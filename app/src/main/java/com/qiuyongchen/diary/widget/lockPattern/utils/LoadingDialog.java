@@ -172,15 +172,6 @@ public abstract class LoadingDialog<Params, Progress, Result> extends AsyncTask<
     }// setDelayTime()
 
     /**
-     * Sets last exception. This method is useful in case an exception raises inside {@link #doInBackground(Object[])}.
-     *
-     * @param t {@link Throwable}
-     */
-    protected void setLastException(Throwable t) {
-        mLastException = t;
-    }// setLastException()
-
-    /**
      * Gets last exception.
      *
      * @return {@link Throwable}
@@ -188,5 +179,14 @@ public abstract class LoadingDialog<Params, Progress, Result> extends AsyncTask<
     protected Throwable getLastException() {
         return mLastException;
     }// getLastException()
+
+    /**
+     * Sets last exception. This method is useful in case an exception raises inside {@link #doInBackground(Object[])}.
+     *
+     * @param t {@link Throwable}
+     */
+    protected void setLastException(Throwable t) {
+        mLastException = t;
+    }// setLastException()
 
 }

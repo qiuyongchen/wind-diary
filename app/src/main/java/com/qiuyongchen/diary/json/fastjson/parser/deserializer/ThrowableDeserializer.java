@@ -1,17 +1,18 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSON;
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.Feature;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
+import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.Feature;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
-import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
-import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
 
 public class ThrowableDeserializer extends JavaBeanDeserializer {
 
@@ -21,7 +22,12 @@ public class ThrowableDeserializer extends JavaBeanDeserializer {
 
     @SuppressWarnings("unchecked")
     public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
-        JSONScanner lexer = (JSONScanner) parser.getLexer();
+        JSONLexer lexer = parser.getLexer();
+
+        if (lexer.token() == JSONToken.NULL) {
+            lexer.nextToken();
+            return null;
+        }
 
         if (parser.getResolveStatus() == DefaultJSONParser.TypeNameRedirect) {
             parser.setResolveStatus(DefaultJSONParser.NONE);
@@ -63,7 +69,7 @@ public class ThrowableDeserializer extends JavaBeanDeserializer {
 
             lexer.nextTokenWithColon(JSONToken.LITERAL_STRING);
 
-            if ("@type".equals(key)) {
+            if (JSON.DEFAULT_TYPE_KEY.equals(key)) {
                 if (lexer.token() == JSONToken.LITERAL_STRING) {
                     String exClassName = lexer.stringVal();
                     exClass = TypeUtils.loadClass(exClassName);
@@ -87,10 +93,6 @@ public class ThrowableDeserializer extends JavaBeanDeserializer {
             } else {
                 // TODO
                 otherValues.put(key, parser.parse());
-            }
-
-            if (lexer.token() == JSONToken.COMMA) {
-                continue;
             }
 
             if (lexer.token() == JSONToken.RBRACE) {

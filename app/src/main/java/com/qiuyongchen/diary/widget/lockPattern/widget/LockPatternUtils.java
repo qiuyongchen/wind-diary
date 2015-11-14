@@ -18,6 +18,9 @@ package com.qiuyongchen.diary.widget.lockPattern.widget;
 
 import android.util.Log;
 
+import com.qiuyongchen.diary.widget.lockPattern.collect.Lists;
+import com.qiuyongchen.diary.widget.lockPattern.utils.Randoms;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -25,9 +28,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import com.qiuyongchen.diary.widget.lockPattern.collect.Lists;
-import com.qiuyongchen.diary.widget.lockPattern.utils.Randoms;
 
 import static com.qiuyongchen.diary.widget.lockPattern.BuildConfig.DEBUG;
 
@@ -37,19 +37,17 @@ import static com.qiuyongchen.diary.widget.lockPattern.BuildConfig.DEBUG;
 public class LockPatternUtils {
 
     /**
-     * Used for debugging...
-     */
-    private static final String CLASSNAME = LockPatternUtils.class.getName();
-
-    /**
      * "UTF-8"
      */
     public static final String UTF8 = "UTF-8";
-
     /**
      * "SHA-1"
      */
     public static final String SHA1 = "SHA-1";
+    /**
+     * Used for debugging...
+     */
+    private static final String CLASSNAME = LockPatternUtils.class.getName();
 
     /**
      * This is singleton class.

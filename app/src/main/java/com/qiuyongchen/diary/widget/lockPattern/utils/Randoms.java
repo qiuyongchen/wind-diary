@@ -16,10 +16,10 @@
 
 package com.qiuyongchen.diary.widget.lockPattern.utils;
 
+import com.qiuyongchen.diary.widget.lockPattern.collect.Lists;
+
 import java.util.List;
 import java.util.Random;
-
-import com.qiuyongchen.diary.widget.lockPattern.collect.Lists;
 
 /**
  * Random utilities.

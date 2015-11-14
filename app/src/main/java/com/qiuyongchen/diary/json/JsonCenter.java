@@ -1,17 +1,17 @@
 package com.qiuyongchen.diary.json;
 
-import java.util.ArrayList;
-
 import android.util.Log;
 
+import com.qiuyongchen.diary.data.DiaryItem;
 import com.qiuyongchen.diary.json.fastjson.JSON;
 import com.qiuyongchen.diary.json.fastjson.JSONArray;
-import com.qiuyongchen.diary.data.DiaryItem;
+
+import java.util.ArrayList;
 
 /**
- * @author Administrator
- *
+ * Created by qiuyongchen on 2015/10/4.
  */
+
 public class JsonCenter {
 
 	/**
@@ -20,8 +20,8 @@ public class JsonCenter {
 	 * @return the json string
 	 */
 	public String export_to_local_json(ArrayList<DiaryItem> all_diary_item) {
-		JsonObject mjson = new JsonObject("CLIENT", "ROOT", all_diary_item);
-		String str = JSON.toJSONString(mjson);
+		JsonObject mJson = new JsonObject("CLIENT", "ROOT", all_diary_item);
+		String str = JSON.toJSONString(mJson);
 		Log.e("to json", str);
 		return str;
 	}
@@ -42,7 +42,6 @@ public class JsonCenter {
 		if (!mJSONArray.isEmpty()) {
 			for (int i = 0; i < mJSONArray.size(); i++) {
 				String item = mJSONArray.getString(i);
-				;
 				mArrayList.add(new DiaryItem(JSON.parseObject(item)
 						.getLongValue("_id"), String.valueOf(JSON.parseObject(item).getString(
 								"content")), JSON.parseObject(item).getString("date"),

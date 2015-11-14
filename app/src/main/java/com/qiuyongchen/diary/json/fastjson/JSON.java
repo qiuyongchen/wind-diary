@@ -15,11 +15,34 @@
  */
 package com.qiuyongchen.diary.json.fastjson;
 
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser.ResolveTask;
+import com.qiuyongchen.diary.json.fastjson.parser.Feature;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
+import com.qiuyongchen.diary.json.fastjson.parser.deserializer.FieldDeserializer;
+import com.qiuyongchen.diary.json.fastjson.serializer.JSONSerializer;
+import com.qiuyongchen.diary.json.fastjson.serializer.NameFilter;
+import com.qiuyongchen.diary.json.fastjson.serializer.PropertyFilter;
+import com.qiuyongchen.diary.json.fastjson.serializer.PropertyPreFilter;
+import com.qiuyongchen.diary.json.fastjson.serializer.SerializeConfig;
+import com.qiuyongchen.diary.json.fastjson.serializer.SerializeFilter;
+import com.qiuyongchen.diary.json.fastjson.serializer.SerializeWriter;
+import com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature;
+import com.qiuyongchen.diary.json.fastjson.serializer.ValueFilter;
+import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
+import com.qiuyongchen.diary.json.fastjson.util.IOUtils;
+import com.qiuyongchen.diary.json.fastjson.util.ThreadLocalCache;
+import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
+
 import java.io.IOException;
+import java.io.Writer;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,28 +50,18 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser.ResolveTask;
-import com.qiuyongchen.diary.json.fastjson.parser.Feature;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
-import com.qiuyongchen.diary.json.fastjson.parser.ParserConfig;
-import com.qiuyongchen.diary.json.fastjson.parser.deserializer.FieldDeserializer;
-import com.qiuyongchen.diary.json.fastjson.serializer.JSONSerializer;
-import com.qiuyongchen.diary.json.fastjson.serializer.SerializeConfig;
-import com.qiuyongchen.diary.json.fastjson.serializer.SerializeWriter;
-import com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature;
-import com.qiuyongchen.diary.json.fastjson.util.FieldInfo;
-import com.qiuyongchen.diary.json.fastjson.util.IOUtils;
-import com.qiuyongchen.diary.json.fastjson.util.ThreadLocalCache;
-import com.qiuyongchen.diary.json.fastjson.util.TypeUtils;
-
 /**
  * @author wenshao<szujobs@hotmail.com>
  */
 public abstract class JSON implements JSONStreamAware, JSONAware {
 
+    public final static String VERSION = "1.1.34-android";
+    public static String DEFAULT_TYPE_KEY = "@type";
     public static int    DEFAULT_PARSER_FEATURE;
+    public static String DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    public static int DEFAULT_GENERATE_FEATURE;
+
     static {
         int features = 0;
         features |= Feature.AutoCloseSource.getMask();
@@ -62,17 +75,14 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
         DEFAULT_PARSER_FEATURE = features;
     }
 
-    public static String DEFFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-    public static int    DEFAULT_GENERATE_FEATURE;
     static {
         int features = 0;
         features |= com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature.QuoteFieldNames.getMask();
         features |= com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature.SkipTransientField.getMask();
         features |= com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature.WriteEnumUsingToString.getMask();
         features |= com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature.SortField.getMask();
-         features |= com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature.WriteTabAsSpecial.getMask();
-//        features |= com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature.WriteSlashAsSpecial.getMask();
+        // features |=
+        // com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature.WriteSlashAsSpecial.getMask();
         DEFAULT_GENERATE_FEATURE = features;
     }
 
@@ -96,7 +106,7 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
     }
 
     public static final Object parse(byte[] input, Feature... features) {
-        return parse(input, 0, input.length, ThreadLocalCache.getUTF8Decoder(), features);
+        return parse(input, 0, input.length, Charset.forName("UTF-8").newDecoder(), features);
     }
 
     public static final Object parse(byte[] input, int off, int len, CharsetDecoder charsetDecoder, Feature... features) {
@@ -163,7 +173,7 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
 
     @SuppressWarnings("unchecked")
     public static final <T> T parseObject(String text, Class<T> clazz, Feature... features) {
-        return (T) parseObject(text, (Type) clazz, ParserConfig.getGlobalInstance(), DEFAULT_PARSER_FEATURE, features);
+        return (T) parseObject(text, clazz, ParserConfig.getGlobalInstance(), DEFAULT_PARSER_FEATURE, features);
     }
 
     @SuppressWarnings("unchecked")
@@ -182,13 +192,13 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
         }
 
         DefaultJSONParser parser = new DefaultJSONParser(input, ParserConfig.getGlobalInstance(), featureValues);
-        T value = (T) parser.parseObject(clazz);
+        T value = parser.parseObject(clazz);
 
         handleResovleTask(parser, value);
 
         parser.close();
 
-        return (T) value;
+        return value;
     }
 
     @SuppressWarnings("unchecked")
@@ -203,20 +213,16 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
         }
 
         DefaultJSONParser parser = new DefaultJSONParser(input, config, featureValues);
-        T value = (T) parser.parseObject(clazz);
+        T value = parser.parseObject(clazz);
 
         handleResovleTask(parser, value);
 
         parser.close();
 
-        return (T) value;
+        return value;
     }
 
     public static <T> int handleResovleTask(DefaultJSONParser parser, T value) {
-        if (parser.isEnabled(Feature.DisableCircularReferenceDetect)) {
-            return 0;
-        }
-
         int size = parser.getResolveTaskList().size();
         for (int i = 0; i < size; ++i) {
             ResolveTask task = parser.getResolveTaskList().get(i);
@@ -236,13 +242,13 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
             }
             fieldDeser.setValue(object, refValue);
         }
-        
+
         return size;
     }
 
     @SuppressWarnings("unchecked")
     public static final <T> T parseObject(byte[] input, Type clazz, Feature... features) {
-        return (T) parseObject(input, 0, input.length, ThreadLocalCache.getUTF8Decoder(), clazz, features);
+        return (T) parseObject(input, 0, input.length, Charset.forName("UTF-8").newDecoder(), clazz, features);
     }
 
     @SuppressWarnings("unchecked")
@@ -274,13 +280,13 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
         }
 
         DefaultJSONParser parser = new DefaultJSONParser(input, length, ParserConfig.getGlobalInstance(), featureValues);
-        T value = (T) parser.parseObject(clazz);
+        T value = parser.parseObject(clazz);
 
         handleResovleTask(parser, value);
 
         parser.close();
 
-        return (T) value;
+        return value;
     }
 
     public static final <T> T parseObject(String text, Class<T> clazz) {
@@ -296,7 +302,7 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
 
         JSONArray array;
 
-        JSONScanner lexer = parser.getLexer();
+        JSONLexer lexer = parser.getLexer();
         if (lexer.token() == JSONToken.NULL) {
             lexer.nextToken();
             array = null;
@@ -322,7 +328,7 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
         List<T> list;
 
         DefaultJSONParser parser = new DefaultJSONParser(text, ParserConfig.getGlobalInstance());
-        JSONScanner lexer = parser.getLexer();
+        JSONLexer lexer = parser.getLexer();
         if (lexer.token() == JSONToken.NULL) {
             lexer.nextToken();
             list = null;
@@ -337,6 +343,8 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
 
         return list;
     }
+
+    // ======================
 
     public static final List<Object> parseArray(String text, Type[] types) {
         if (text == null) {
@@ -360,8 +368,6 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
         return list;
     }
 
-    // ======================
-
     public static final String toJSONString(Object object) {
         return toJSONString(object, new SerializerFeature[0]);
     }
@@ -382,11 +388,12 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
             out.close();
         }
     }
-    
+
     /**
      * @since 1.1.14
      */
-    public static final String toJSONStringWithDateFormat(Object object, String dateFormat, SerializerFeature... features) {
+    public static final String toJSONStringWithDateFormat(Object object, String dateFormat,
+                                                          SerializerFeature... features) {
         SerializeWriter out = new SerializeWriter();
 
         try {
@@ -394,11 +401,48 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
             for (com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature feature : features) {
                 serializer.config(feature, true);
             }
-            
+
             serializer.config(SerializerFeature.WriteDateUseDateFormat, true);
-            
+
             if (dateFormat != null) {
                 serializer.setDateFormat(dateFormat);
+            }
+
+            serializer.write(object);
+
+            return out.toString();
+        } finally {
+            out.close();
+        }
+    }
+
+    public static final String toJSONString(Object object, SerializeFilter filter, SerializerFeature... features) {
+        SerializeWriter out = new SerializeWriter();
+
+        try {
+            JSONSerializer serializer = new JSONSerializer(out);
+            for (com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature feature : features) {
+                serializer.config(feature, true);
+            }
+
+            serializer.config(SerializerFeature.WriteDateUseDateFormat, true);
+
+            if (filter != null) {
+                if (filter instanceof PropertyPreFilter) {
+                    serializer.getPropertyPreFilters().add((PropertyPreFilter) filter);
+                }
+
+                if (filter instanceof NameFilter) {
+                    serializer.getNameFilters().add((NameFilter) filter);
+                }
+
+                if (filter instanceof ValueFilter) {
+                    serializer.getValueFilters().add((ValueFilter) filter);
+                }
+
+                if (filter instanceof PropertyFilter) {
+                    serializer.getPropertyFilters().add((PropertyFilter) filter);
+                }
             }
 
             serializer.write(object);
@@ -484,34 +528,20 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
 
     // ======================================
 
-    @Override
-    public String toString() {
-        return toJSONString();
-    }
+    public static final void writeJSONStringTo(Object object, Writer writer, SerializerFeature... features) {
+        SerializeWriter out = new SerializeWriter(writer);
 
-    public String toJSONString() {
-        SerializeWriter out = new SerializeWriter();
         try {
-            new JSONSerializer(out).write(this);
-            return out.toString();
+            JSONSerializer serializer = new JSONSerializer(out);
+            for (com.qiuyongchen.diary.json.fastjson.serializer.SerializerFeature feature : features) {
+                serializer.config(feature, true);
+            }
+
+            serializer.write(object);
         } finally {
             out.close();
         }
     }
-
-    public void writeJSONString(Appendable appendable) {
-        SerializeWriter out = new SerializeWriter();
-        try {
-            new JSONSerializer(out).write(this);
-            appendable.append(out.toString());
-        } catch (IOException e) {
-            throw new JSONException(e.getMessage(), e);
-        } finally {
-            out.close();
-        }
-    }
-
-    // ///////
 
     public static final Object toJSON(Object javaObject) {
         return toJSON(javaObject, ParserConfig.getGlobalInstance());
@@ -524,7 +554,7 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
         }
 
         if (javaObject instanceof JSON) {
-            return (JSON) javaObject;
+            return javaObject;
         }
 
         if (javaObject instanceof Map) {
@@ -597,9 +627,36 @@ public abstract class JSON implements JSONStreamAware, JSONAware {
         }
     }
 
+    // ///////
+
     public static final <T> T toJavaObject(JSON json, Class<T> clazz) {
         return TypeUtils.cast(json, clazz, ParserConfig.getGlobalInstance());
     }
-    
-    public final static String VERSION = "1.1.28";
+
+    @Override
+    public String toString() {
+        return toJSONString();
+    }
+
+    public String toJSONString() {
+        SerializeWriter out = new SerializeWriter();
+        try {
+            new JSONSerializer(out).write(this);
+            return out.toString();
+        } finally {
+            out.close();
+        }
+    }
+
+    public void writeJSONString(Appendable appendable) {
+        SerializeWriter out = new SerializeWriter();
+        try {
+            new JSONSerializer(out).write(this);
+            appendable.append(out.toString());
+        } catch (IOException e) {
+            throw new JSONException(e.getMessage(), e);
+        } finally {
+            out.close();
+        }
+    }
 }

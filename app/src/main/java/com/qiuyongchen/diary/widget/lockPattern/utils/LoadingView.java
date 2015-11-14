@@ -116,15 +116,6 @@ public abstract class LoadingView<Params, Progress, Result> extends AsyncTask<Pa
     }// setDelayTime()
 
     /**
-     * Sets last exception. This method is useful in case an exception raises inside {@link #doInBackground(Object[])}.
-     *
-     * @param t {@link Throwable}
-     */
-    protected void setLastException(Throwable t) {
-        mLastException = t;
-    }// setLastException()
-
-    /**
      * Gets last exception.
      *
      * @return {@link Throwable}
@@ -132,5 +123,14 @@ public abstract class LoadingView<Params, Progress, Result> extends AsyncTask<Pa
     public Throwable getLastException() {
         return mLastException;
     }// getLastException()
+
+    /**
+     * Sets last exception. This method is useful in case an exception raises inside {@link #doInBackground(Object[])}.
+     *
+     * @param t {@link Throwable}
+     */
+    protected void setLastException(Throwable t) {
+        mLastException = t;
+    }// setLastException()
 
 }

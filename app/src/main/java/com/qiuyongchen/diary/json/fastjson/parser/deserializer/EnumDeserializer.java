@@ -1,14 +1,14 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSONException;
+import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.qiuyongchen.diary.json.fastjson.JSONException;
-import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
 
 @SuppressWarnings("rawtypes")
 public class EnumDeserializer implements ObjectDeserializer {
@@ -38,7 +38,7 @@ public class EnumDeserializer implements ObjectDeserializer {
     public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
         try {
             Object value;
-            final JSONScanner lexer = parser.getLexer();
+            final JSONLexer lexer = parser.getLexer();
             if (lexer.token() == JSONToken.LITERAL_INT) {
                 value = lexer.intValue();
                 lexer.nextToken(JSONToken.COMMA);
@@ -53,7 +53,7 @@ public class EnumDeserializer implements ObjectDeserializer {
                 lexer.nextToken(JSONToken.COMMA);
 
                 if (strVal.length() == 0) {
-                    return (T) null;
+                    return null;
                 }
 
                 value = nameMap.get(strVal);

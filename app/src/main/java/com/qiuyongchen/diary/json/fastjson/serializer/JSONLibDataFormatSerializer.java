@@ -1,10 +1,10 @@
 package com.qiuyongchen.diary.json.fastjson.serializer;
 
+import com.qiuyongchen.diary.json.fastjson.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Date;
-
-import com.qiuyongchen.diary.json.fastjson.JSONObject;
 
 public class JSONLibDataFormatSerializer implements ObjectSerializer {
 

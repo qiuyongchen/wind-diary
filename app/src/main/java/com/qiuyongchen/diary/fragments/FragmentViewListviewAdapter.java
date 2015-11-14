@@ -18,7 +18,7 @@ import java.util.List;
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 /**
- * Created by redleaf on 2015/10/24.
+ * Created by qiuyongchen on 2015/10/24.
  */
 
 public class FragmentViewListviewAdapter extends BaseAdapter implements

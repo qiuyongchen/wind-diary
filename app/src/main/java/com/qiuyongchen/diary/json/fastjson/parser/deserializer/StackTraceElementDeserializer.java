@@ -1,12 +1,13 @@
 package com.qiuyongchen.diary.json.fastjson.parser.deserializer;
 
-import java.lang.reflect.Type;
-
+import com.qiuyongchen.diary.json.fastjson.JSON;
 import com.qiuyongchen.diary.json.fastjson.JSONException;
 import com.qiuyongchen.diary.json.fastjson.parser.DefaultJSONParser;
 import com.qiuyongchen.diary.json.fastjson.parser.Feature;
-import com.qiuyongchen.diary.json.fastjson.parser.JSONScanner;
+import com.qiuyongchen.diary.json.fastjson.parser.JSONLexer;
 import com.qiuyongchen.diary.json.fastjson.parser.JSONToken;
+
+import java.lang.reflect.Type;
 
 public class StackTraceElementDeserializer implements ObjectDeserializer {
 
@@ -14,7 +15,7 @@ public class StackTraceElementDeserializer implements ObjectDeserializer {
 
     @SuppressWarnings("unchecked")
     public <T> T deserialze(DefaultJSONParser parser, Type type, Object fieldName) {
-        JSONScanner lexer = parser.getLexer();
+        JSONLexer lexer = parser.getLexer();
         if (lexer.token() == JSONToken.NULL) {
             lexer.nextToken();
             return null;
@@ -88,30 +89,25 @@ public class StackTraceElementDeserializer implements ObjectDeserializer {
                 } else {
                     throw new JSONException("syntax error");
                 }
-            } else if (key == "@type") {
-                if (lexer.token() == JSONToken.NULL) {
-                    // skip
-                } else if (lexer.token() == JSONToken.LITERAL_STRING) {
+            } else if (key == JSON.DEFAULT_TYPE_KEY) {
+                if (lexer.token() == JSONToken.LITERAL_STRING) {
                     String elementType = lexer.stringVal();
                     if (!elementType.equals("java.lang.StackTraceElement")) {
                         throw new JSONException("syntax error : " + elementType);    
                     }
                 } else {
-                    throw new JSONException("syntax error");
+                    if (lexer.token() != JSONToken.NULL) {
+                        throw new JSONException("syntax error");
+                    }
                 }
             } else {
                 throw new JSONException("syntax error : " + key);
-            }
-
-            if (lexer.token() == JSONToken.COMMA) {
-                continue;
             }
 
             if (lexer.token() == JSONToken.RBRACE) {
                 lexer.nextToken(JSONToken.COMMA);
                 break;
             }
-
         }
         return (T) new StackTraceElement(declaringClass, methodName, fileName, lineNumber);
     }
