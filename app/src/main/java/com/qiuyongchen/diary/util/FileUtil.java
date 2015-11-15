@@ -124,12 +124,10 @@ public class FileUtil {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        finally {
+        } finally {
             try {
-                output.close();
-
+                if (output != null)
+                    output.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

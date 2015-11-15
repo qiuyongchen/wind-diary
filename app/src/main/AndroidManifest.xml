@@ -29,13 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".widget.lockPattern.LockPatternActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize|screenLayout"
-            android:excludeFromRecents="true"
-            android:exported="false"
-            android:screenOrientation="user"
-            android:theme="@style/Alp_42447968.Theme.Light" />
+
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"></activity>

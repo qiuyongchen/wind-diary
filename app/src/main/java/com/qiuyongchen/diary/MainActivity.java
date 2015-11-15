@@ -21,7 +21,6 @@ import com.qiuyongchen.diary.fragments.FragmentView;
 import com.qiuyongchen.diary.fragments.FragmentWriteOff;
 import com.qiuyongchen.diary.fragments.MyFragmentPageChangeListener;
 import com.qiuyongchen.diary.fragments.MyFragmentPagerAdapter;
-import com.qiuyongchen.diary.widget.lockPattern.LockPatternActivity;
 import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 
@@ -123,20 +122,6 @@ public class MainActivity extends FragmentActivity {
 
         Log.i(Integer.toString(mDPI), Integer.toString(mTabWidget));
         Log.i("ActivityMain", "initView()");
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQ_CREATE_PATTERN: {
-                if (resultCode == RESULT_OK) {
-                    char[] pattern = data.getCharArrayExtra(LockPatternActivity.EXTRA_PATTERN);
-                    Log.d(pattern.toString(), pattern.toString());
-                }
-
-                break;
-            }// REQ_CREATE_PATTERN
-        }
     }
 
     private void initViewPager() {
