@@ -34,13 +34,11 @@ import haibison.android.lockpattern.LockPatternActivity;
  */
 
 public class SettingActivity extends Activity {
+    private static final int REQ_CREATE_PATTERN = 1;
     private Button c;
     private boolean isNight = false;
     private SharedPreferences sharedPreferences;
-
     private SettingsFragment mSettingsFragment;
-
-    private static final int REQ_CREATE_PATTERN = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +68,7 @@ public class SettingActivity extends Activity {
             case REQ_CREATE_PATTERN: {
                 if (resultCode == RESULT_OK) {
                     char[] pattern = data.getCharArrayExtra(LockPatternActivity.EXTRA_PATTERN);
-                    Log.i("onActivityResult",String.valueOf(pattern));
+                    Log.i("onActivityResult", String.valueOf(pattern));
                 }
 
                 break;
@@ -123,8 +121,7 @@ public class SettingActivity extends Activity {
             Preference.OnPreferenceClickListener {
         private Preference export_to_json;
         private Preference export_to_txt;
-        private Preference import_from_json = this
-                .findPreference("import_from_json");
+        private Preference import_from_json;
         private Preference about;
 
         public SettingsFragment() {
@@ -137,6 +134,7 @@ public class SettingActivity extends Activity {
 
             export_to_json = this.findPreference("export_to_json");
             export_to_txt = this.findPreference("export_to_txt");
+            import_from_json = this.findPreference("import_from_json");
             about = this.findPreference("about");
 
             export_to_json.setOnPreferenceClickListener(this);
