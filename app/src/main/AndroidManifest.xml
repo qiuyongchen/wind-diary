@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.qiuyongchen.diary">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -33,6 +34,12 @@
         <activity
             android:name=".SettingActivity"
             android:label="@string/title_activity_setting"></activity>
+
+        <activity
+            android:name="haibison.android.lockpattern.LockPatternActivity"
+            android:theme="@style/Alp_42447968.Theme.Dialog.Dark"
+            tools:replace="android:theme"/>
+
     </application>
 
 </manifest>

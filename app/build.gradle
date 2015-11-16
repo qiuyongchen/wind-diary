@@ -22,10 +22,12 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.0.1'
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    compile 'com.android.support:support-v4:23.0.1'
-    compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:cardview-v7:23.0.+'
+    compile 'com.android.support:design:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.0.+'
+    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.github.haibison:android-lockpattern:7.0.0'
+    compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
+    compile 'com.nineoldandroids:library:2.4.0'
 }

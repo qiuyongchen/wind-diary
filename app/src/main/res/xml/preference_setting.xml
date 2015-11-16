@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout="@layout/preference_item"
+    android:title="@string/title_activity_setting">
+
+    <PreferenceCategory
+        android:layout="@layout/preference_category_widget"
+        android:title="@string/export_data">
+        <Preference
+            android:key="export_to_json"
+            android:layout="@layout/preference_item"
+            android:summary="@string/export_to_json_detail"
+            android:title="@string/export_to_json" />
+        <Preference
+            android:key="export_to_txt"
+            android:layout="@layout/preference_item"
+            android:summary="@string/export_to_txt_detail"
+            android:title="@string/export_to_txt" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/preference_category_widget"
+        android:title="@string/import_data">
+        <Preference
+            android:key="import_from_json"
+            android:layout="@layout/preference_item"
+            android:summary="@string/import_from_json_detail"
+            android:title="@string/import_from_json" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:layout="@layout/preference_category_widget"
+        android:title="@string/help">
+        <Preference
+            android:key="like"
+            android:layout="@layout/preference_item"
+            android:summary="@string/like_this_app_detail"
+            android:title="@string/like_this_app">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=com.qiuyongchen.diary" />
+        </Preference>
+        <Preference
+            android:key="about"
+            android:layout="@layout/preference_item"
+            android:summary="@string/about_detail"
+            android:title="@string/about"></Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

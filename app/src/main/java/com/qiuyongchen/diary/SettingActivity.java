@@ -2,10 +2,14 @@ package com.qiuyongchen.diary;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -17,9 +21,13 @@ import com.qiuyongchen.diary.data.DataSourceDiary;
 import com.qiuyongchen.diary.data.DiaryItem;
 import com.qiuyongchen.diary.json.JsonCenter;
 import com.qiuyongchen.diary.util.FileUtil;
+import com.qiuyongchen.diary.widget.materialdesign.views.CheckBox;
+import com.qiuyongchen.diary.widget.materialdesign.widgets.Dialog;
 import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 
 import java.util.ArrayList;
+
+import haibison.android.lockpattern.LockPatternActivity;
 
 /**
  * Created by qiuyongchen on 2015/10/15.
@@ -29,6 +37,10 @@ public class SettingActivity extends Activity {
     private Button c;
     private boolean isNight = false;
     private SharedPreferences sharedPreferences;
+
+    private SettingsFragment mSettingsFragment;
+
+    private static final int REQ_CREATE_PATTERN = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,55 +58,23 @@ public class SettingActivity extends Activity {
         setStatusStyle();
 
         setContentView(R.layout.activity_setting);
-    }
-
-    public void OnClickNight(View view) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        if (isNight) {
-            setTheme(R.style.AppTheme_Night);
-            isNight = false;
-        } else {
-            setTheme(R.style.AppTheme);
-            isNight = true;
+        if (savedInstanceState == null) {
+            mSettingsFragment = new SettingsFragment();
+            replaceFragment(R.id.settings_container, mSettingsFragment);
         }
-        editor.putBoolean("isNight", isNight);
-        editor.apply();
-        recreate();
     }
 
-    public void OnClickExportToJson(View view) {
-        export_json_to_sdcard();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQ_CREATE_PATTERN: {
+                if (resultCode == RESULT_OK) {
+                    char[] pattern = data.getCharArrayExtra(LockPatternActivity.EXTRA_PATTERN);
+                    Log.i("onActivityResult",String.valueOf(pattern));
+                }
 
-        Toast.makeText(this, R.string.export_complete,
-                Toast.LENGTH_LONG).show();
-
-        Log.i("onPreferenceClick", " click export_to_json");
-    }
-
-    public void OnClickExportToTxt(View view) {
-        exportDatabaseToTxt();
-
-        Toast.makeText(this, R.string.export_complete,
-                Toast.LENGTH_LONG).show();
-
-        Log.i("onPreferenceClick", " click export_to_txt");
-    }
-
-    public void OnClickImportFromJson(View view) {
-        if (import_json_from_sdcard()) {
-
-            Toast.makeText(this, R.string.import_complete,
-                    Toast.LENGTH_LONG).show();
-
-            Log.i("onPreferenceClick",
-                    " click import_from_json and succeed");
-        } else {
-            Toast.makeText(this,
-                    R.string.import_complete_fail, Toast.LENGTH_LONG)
-                    .show();
-
-            Log.i("onPreferenceClick",
-                    " click import_from_json and fail");
+                break;
+            }// REQ_CREATE_PATTERN
         }
     }
 
@@ -130,89 +110,182 @@ public class SettingActivity extends Activity {
         win.setAttributes(winParams);
     }
 
-    public boolean exportDatabaseToTxt() {
-        String fileDirName = getString(R.string.file_dir_name).toString();
-        DataSourceDiary mDataSourceDiary = new DataSourceDiary(
-                this);
-        ArrayList<DiaryItem> mArrayList = mDataSourceDiary.getAllDiary();
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void replaceFragment(int viewId, android.app.Fragment fragment) {
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction().replace(viewId, fragment).commit();
+    }
 
-        while (!mArrayList.isEmpty()) {
+    /**
+     * A placeholder fragment containing a settings view.
+     */
+    public static class SettingsFragment extends PreferenceFragment implements
+            Preference.OnPreferenceClickListener {
+        private Preference export_to_json;
+        private Preference export_to_txt;
+        private Preference import_from_json = this
+                .findPreference("import_from_json");
+        private Preference about;
 
-            DiaryItem oneItem = mArrayList.get(0);
-            mArrayList.remove(0);
+        public SettingsFragment() {
+        }
 
-            String date = oneItem.date;
-            String text = oneItem.time + "\n    " + oneItem.content
-                    + "\n\n";
-            int num = mArrayList.size();
-            for (int i = 0; i < num; i++) {
-                DiaryItem item = mArrayList.get(i);
-                // if this item's date is the same as the 'oneItem', it will
-                // be
-                // deleted from the array.
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preference_setting);
 
-                if (item.date.equals(date)) {
-                    Log.e(date, item.date);
-                    text += item.time + "\n    " + item.content + "\n\n";
-                    mArrayList.remove(i);
-                    i--;
-                    num--;
+            export_to_json = this.findPreference("export_to_json");
+            export_to_txt = this.findPreference("export_to_txt");
+            about = this.findPreference("about");
+
+            export_to_json.setOnPreferenceClickListener(this);
+            export_to_txt.setOnPreferenceClickListener(this);
+            import_from_json.setOnPreferenceClickListener(this);
+            about.setOnPreferenceClickListener(this);
+
+        }
+
+        @Override
+        public boolean onPreferenceClick(Preference preference) {
+            if (preference == export_to_json) {
+
+                export_json_to_sdcard();
+
+                Toast.makeText(getActivity(), R.string.export_complete,
+                        Toast.LENGTH_LONG).show();
+
+                Log.i("onPreferenceClick", " click export_to_json");
+
+            } else {
+                if (preference == export_to_txt) {
+
+                    exportDatabaseToTxt();
+
+                    Toast.makeText(getActivity(), R.string.export_complete,
+                            Toast.LENGTH_LONG).show();
+
+                    Log.i("onPreferenceClick", " click export_to_txt");
+
+                } else {
+                    if (preference == import_from_json) {
+
+                        if (import_json_from_sdcard()) {
+                            Toast.makeText(getActivity(), R.string.import_complete,
+                                    Toast.LENGTH_LONG).show();
+
+                            Log.i("onPreferenceClick",
+                                    " click import_from_json and succeed");
+                        } else {
+                            Toast.makeText(getActivity(),
+                                    R.string.import_complete_fail, Toast.LENGTH_LONG)
+                                    .show();
+
+                            Log.i("onPreferenceClick",
+                                    " click import_from_json and fail");
+                        }
+
+                    } else {
+                        if (preference == about) {
+                            String title = getString(R.string.about);
+                            String message = getString(R.string.about_content);
+                            Dialog dialog = new Dialog(getActivity(), title, message);
+                            Log.i("FragmentMenu", dialog.getMessage());
+                            dialog.show();
+
+                            Log.i("onPreferenceClick", " click about");
+                        }
+                    }
                 }
             }
 
-            FileUtil.writeToSDCardFile(fileDirName, date + ".txt",
-                    text, false);
+            return false;
         }
 
-        return true;
+        public boolean exportDatabaseToTxt() {
+            String fileDirName = getString(R.string.file_dir_name);
+            DataSourceDiary mDataSourceDiary = new DataSourceDiary(
+                    this.getActivity().getApplication());
+            ArrayList<DiaryItem> mArrayList = mDataSourceDiary.getAllDiary();
+
+            while (!mArrayList.isEmpty()) {
+
+                DiaryItem oneItem = mArrayList.get(0);
+                mArrayList.remove(0);
+
+                String date = oneItem.date;
+                String text = oneItem.time + "\n    " + oneItem.content
+                        + "\n\n";
+                int num = mArrayList.size();
+                for (int i = 0; i < num; i++) {
+                    DiaryItem item = mArrayList.get(i);
+                    // if this item's date is the same as the 'oneItem', it will
+                    // be
+                    // deleted from the array.
+
+                    if (item.date.equals(date)) {
+                        Log.e(date, item.date);
+                        text += item.time + "\n    " + item.content + "\n\n";
+                        mArrayList.remove(i);
+                        i--;
+                        num--;
+                    }
+                }
+
+                FileUtil.writeToSDCardFile(fileDirName, date + ".txt",
+                        text, false);
+            }
+
+            return true;
+        }
+
+        public void export_json_to_sdcard() {
+
+            // get the export ArrayList from database.
+            DataSourceDiary mDataSourceDiary = new DataSourceDiary(
+                    this.getActivity().getApplicationContext());
+            ArrayList<DiaryItem> mArrayList = mDataSourceDiary.getAllDiary();
+
+            // transfer ArrayList to json which is String form.
+            JsonCenter mJsonCenter = new JsonCenter();
+            String json = mJsonCenter.export_to_local_json(mArrayList);
+
+            Log.i("export_json_to_sdcard",
+                    "try to export "
+                            + String.valueOf(mDataSourceDiary.getAllDiary()
+                            .size()) + " diary item(s) into database");
+
+            FileUtil.comprobarSDCard(this.getActivity().getApplication());
+
+            // write json into the file in SD card.
+            FileUtil.writeToSDCardFile(getString(R.string.file_dir_name), getString(R.string.export_to_local_json_file_name), json, false);
+        }
+
+        public boolean import_json_from_sdcard() {
+
+            // get json from sd card
+            String json = FileUtil.readFromSDCardFile(getString(R.string.file_dir_name),
+                    getString(R.string.export_to_local_json_file_name));
+
+            if (json == null || json.isEmpty())
+                return false;
+
+            // transfer the json to ArrayList<DiaryItem> in JsonCenter
+            JsonCenter mJsonCenter = new JsonCenter();
+            ArrayList<DiaryItem> mArrayList = mJsonCenter
+                    .import_from_local_json(json);
+
+            Log.d("import_json_from_sdcard",
+                    "try to import " + String.valueOf(mArrayList.size())
+                            + "diary items into database");
+
+            // insert all of these diaryitem got above into database
+            DataSourceDiary mDataSourceDiary = new DataSourceDiary(
+                    this.getActivity().getApplicationContext());
+            mDataSourceDiary.importIntoDatabase(mArrayList);
+
+            return true;
+        }
+
     }
-
-    public void export_json_to_sdcard() {
-
-        // get the export ArrayList from database.
-        DataSourceDiary mDataSourceDiary = new DataSourceDiary(
-                this.getApplicationContext());
-        ArrayList<DiaryItem> mArrayList = mDataSourceDiary.getAllDiary();
-
-        // transfer ArrayList to json which is String form.
-        JsonCenter mJsonCenter = new JsonCenter();
-        String json = mJsonCenter.export_to_local_json(mArrayList);
-
-        Log.i("export_json_to_sdcard",
-                "try to export "
-                        + String.valueOf(mDataSourceDiary.getAllDiary()
-                        .size()) + " diary item(s) into database");
-
-        FileUtil.comprobarSDCard(this);
-
-        // write json into the file in SD card.
-        FileUtil.writeToSDCardFile(getString(R.string.file_dir_name), getString(R.string.export_to_local_json_file_name), json, false);
-    }
-
-    public boolean import_json_from_sdcard() {
-
-        // get json from sd card
-        String json = FileUtil.readFromSDCardFile(getString(R.string.file_dir_name),
-                getString(R.string.export_to_local_json_file_name));
-
-        if (json == null || json == "")
-            return false;
-
-        // transfer the json to ArrayList<DiaryItem> in JsonCenter
-        JsonCenter mJsonCenter = new JsonCenter();
-        ArrayList<DiaryItem> mArrayList = mJsonCenter
-                .import_from_local_json(json);
-
-        Log.d("import_json_from_sdcard",
-                "try to import " + String.valueOf(mArrayList.size())
-                        + "diary items into database");
-
-        // insert all of these diaryitem got above into database
-        DataSourceDiary mDataSourceDiary = new DataSourceDiary(
-                this.getApplicationContext());
-        mDataSourceDiary.importIntoDatabase(mArrayList);
-
-        return true;
-    }
-
 }
