@@ -60,7 +60,7 @@ public class MainActivity extends FragmentActivity {
                     break;
                 case R.id.buttonSetting:
                     Log.i("buttonSetting", "");
-                    Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivity(intent);
                     break;
             }

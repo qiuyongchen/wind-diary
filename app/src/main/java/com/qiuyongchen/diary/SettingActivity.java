@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -21,7 +20,6 @@ import com.qiuyongchen.diary.data.DataSourceDiary;
 import com.qiuyongchen.diary.data.DiaryItem;
 import com.qiuyongchen.diary.json.JsonCenter;
 import com.qiuyongchen.diary.util.FileUtil;
-import com.qiuyongchen.diary.widget.materialdesign.views.CheckBox;
 import com.qiuyongchen.diary.widget.materialdesign.widgets.Dialog;
 import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 
@@ -122,6 +120,7 @@ public class SettingActivity extends Activity {
         private Preference export_to_json;
         private Preference export_to_txt;
         private Preference import_from_json;
+        private Preference lock_pattern_test;
         private Preference about;
 
         public SettingsFragment() {
@@ -135,11 +134,13 @@ public class SettingActivity extends Activity {
             export_to_json = this.findPreference("export_to_json");
             export_to_txt = this.findPreference("export_to_txt");
             import_from_json = this.findPreference("import_from_json");
+            lock_pattern_test = this.findPreference("lock_pattern_test");
             about = this.findPreference("about");
 
             export_to_json.setOnPreferenceClickListener(this);
             export_to_txt.setOnPreferenceClickListener(this);
             import_from_json.setOnPreferenceClickListener(this);
+            lock_pattern_test.setOnPreferenceClickListener(this);
             about.setOnPreferenceClickListener(this);
 
         }
@@ -147,54 +148,43 @@ public class SettingActivity extends Activity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (preference == export_to_json) {
-
                 export_json_to_sdcard();
-
                 Toast.makeText(getActivity(), R.string.export_complete,
                         Toast.LENGTH_LONG).show();
-
                 Log.i("onPreferenceClick", " click export_to_json");
 
-            } else {
-                if (preference == export_to_txt) {
+            } else if (preference == export_to_txt) {
+                exportDatabaseToTxt();
+                Toast.makeText(getActivity(), R.string.export_complete,
+                        Toast.LENGTH_LONG).show();
+                Log.i("onPreferenceClick", " click export_to_txt");
 
-                    exportDatabaseToTxt();
-
-                    Toast.makeText(getActivity(), R.string.export_complete,
+            } else if (preference == import_from_json) {
+                if (import_json_from_sdcard()) {
+                    Toast.makeText(getActivity(), R.string.import_complete,
                             Toast.LENGTH_LONG).show();
-
-                    Log.i("onPreferenceClick", " click export_to_txt");
+                    Log.i("onPreferenceClick",
+                            " click import_from_json and succeed");
 
                 } else {
-                    if (preference == import_from_json) {
+                    Toast.makeText(getActivity(),
+                            R.string.import_complete_fail, Toast.LENGTH_LONG)
+                            .show();
+                    Log.i("onPreferenceClick",
+                            " click import_from_json and fail");
 
-                        if (import_json_from_sdcard()) {
-                            Toast.makeText(getActivity(), R.string.import_complete,
-                                    Toast.LENGTH_LONG).show();
-
-                            Log.i("onPreferenceClick",
-                                    " click import_from_json and succeed");
-                        } else {
-                            Toast.makeText(getActivity(),
-                                    R.string.import_complete_fail, Toast.LENGTH_LONG)
-                                    .show();
-
-                            Log.i("onPreferenceClick",
-                                    " click import_from_json and fail");
-                        }
-
-                    } else {
-                        if (preference == about) {
-                            String title = getString(R.string.about);
-                            String message = getString(R.string.about_content);
-                            Dialog dialog = new Dialog(getActivity(), title, message);
-                            Log.i("FragmentMenu", dialog.getMessage());
-                            dialog.show();
-
-                            Log.i("onPreferenceClick", " click about");
-                        }
-                    }
                 }
+            } else if (preference == lock_pattern_test) {
+                Intent intent = new Intent(this.getActivity(), SettingsActivity.class);
+                startActivity(intent);
+
+            } else if (preference == about) {
+                String title = getString(R.string.about);
+                String message = getString(R.string.about_content);
+                Dialog dialog = new Dialog(this.getActivity(), title, message);
+                Log.i("FragmentMenu", dialog.getMessage());
+                dialog.show();
+                Log.i("onPreferenceClick", " click about");
             }
 
             return false;

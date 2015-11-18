@@ -16,7 +16,7 @@ import com.qiuyongchen.diary.R;
 import com.qiuyongchen.diary.widget.materialdesign.views.ButtonFlat;
 
 public class Dialog extends android.app.Dialog{
-	
+
 	Context context;
 	View view;
 	View backView;
@@ -38,7 +38,7 @@ public class Dialog extends android.app.Dialog{
 		this.message = message;
 		this.title = title;
 	}
-	
+
 	@Override
 	  protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);

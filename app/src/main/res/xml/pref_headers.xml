@@ -2,19 +2,14 @@
 
     <!-- These settings headers are only used on tablets. -->
 
-    <header
-        android:fragment="com.qiuyongchen.diary.SettingsActivity$GeneralPreferenceFragment"
-        android:title="@string/pref_header_general"
-        android:icon="@drawable/ic_info_black_24dp" />
+    <header android:fragment="com.qiuyongchen.diary.SettingsActivity$BackupPreferenceFragment"
+        android:title="@string/export_import" android:icon="@drawable/ic_sync_black_24dp" />
 
-    <header
-        android:fragment="com.qiuyongchen.diary.SettingsActivity$NotificationPreferenceFragment"
-        android:title="@string/pref_header_notifications"
+    <header android:fragment="com.qiuyongchen.diary.SettingsActivity$SafePreferenceFragment"
+        android:title="@string/lock_pattern"
         android:icon="@drawable/ic_notifications_black_24dp" />
 
-    <header
-        android:fragment="com.qiuyongchen.diary.SettingsActivity$DataSyncPreferenceFragment"
-        android:title="@string/pref_header_data_sync"
-        android:icon="@drawable/ic_sync_black_24dp" />
+    <header android:fragment="com.qiuyongchen.diary.SettingsActivity$HelpPreferenceFragment"
+        android:title="@string/help" android:icon="@drawable/ic_info_black_24dp" />
 
 </preference-headers>

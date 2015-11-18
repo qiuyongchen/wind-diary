@@ -1,5 +1,24 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <PreferenceCategory
+        android:layout="@layout/preference_category_widget"
+        android:title="@string/help">
+        <Preference
+            android:key="like"
+            android:layout="@layout/preference_item"
+            android:summary="@string/like_this_app_detail"
+            android:title="@string/like_this_app">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="market://details?id=com.qiuyongchen.diary" />
+        </Preference>
+        <Preference
+            android:key="about"
+            android:layout="@layout/preference_item"
+            android:summary="@string/about_detail"
+            android:title="@string/about"/>
+    </PreferenceCategory>
+
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
