@@ -37,11 +37,6 @@
             android:name="haibison.android.lockpattern.LockPatternActivity"
             android:theme="@style/Alp_42447968.Theme.Dialog.Dark"
             tools:replace="android:theme" />
-        <activity
-            android:name=".SettingsActivity"
-            android:theme="@style/Theme.AppCompat.Light"
-            android:label="@string/title_activity_settings" >
-        </activity>
     </application>
 
 </manifest>

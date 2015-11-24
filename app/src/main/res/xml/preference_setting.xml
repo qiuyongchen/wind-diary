@@ -8,14 +8,25 @@
         android:title="安全设置">
         <PreferenceScreen
             android:key="lock_pattern"
-            android:title="手势密码"
-            android:persistent="false">
+            android:layout="@layout/preference_item"
+            android:persistent="false"
+            android:title="手势密码">
             <Preference
                 android:key="lock_pattern_test"
                 android:layout="@layout/preference_item"
                 android:summary="@string/export_to_json_detail"
                 android:title="@string/export_to_json" />
         </PreferenceScreen>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:layout="@layout/preference_category_widget"
+        android:title="@string/night_mode">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="night_mode"
+            android:layout="@layout/preference_item"
+            android:title="@string/night_mode_on" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -57,7 +68,7 @@
             android:key="about"
             android:layout="@layout/preference_item"
             android:summary="@string/about_detail"
-            android:title="@string/about"/>
+            android:title="@string/about" />
     </PreferenceCategory>
 
 </PreferenceScreen>

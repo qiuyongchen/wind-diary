@@ -15,7 +15,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/title_activity_setting"
-            android:textColor="@color/white"
+            android:textColor="?attr/myTitleTextColor"
             android:textSize="19sp" />
 
     </RelativeLayout>
@@ -26,8 +26,10 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/actionbar_setting"
-        android:background="@color/white"
-        android:scrollIndicators="none">
+        android:background="?attr/backgroundContent"
+        android:overScrollMode="never"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="none">
 
     </FrameLayout>
 

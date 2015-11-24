@@ -3,13 +3,13 @@ package com.qiuyongchen.diary;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,17 +33,17 @@ import haibison.android.lockpattern.LockPatternActivity;
 
 public class SettingActivity extends Activity {
     private static final int REQ_CREATE_PATTERN = 1;
+    private static boolean isNight = false;
+    private static SharedPreferences sharedPreferences;
     private Button c;
-    private boolean isNight = false;
-    private SharedPreferences sharedPreferences;
     private SettingsFragment mSettingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sharedPreferences = getSharedPreferences("UserStyle", Context.MODE_WORLD_READABLE);
-        isNight = sharedPreferences.getBoolean("isNight", false);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        isNight = sharedPreferences.getBoolean("night_mode", false);
         if (isNight) {
             this.setTheme(R.style.AppTheme_Night);
         } else {
@@ -117,6 +117,7 @@ public class SettingActivity extends Activity {
      */
     public static class SettingsFragment extends PreferenceFragment implements
             Preference.OnPreferenceClickListener {
+        private Preference night_mode;
         private Preference export_to_json;
         private Preference export_to_txt;
         private Preference import_from_json;
@@ -131,12 +132,14 @@ public class SettingActivity extends Activity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_setting);
 
+            night_mode = this.findPreference("night_mode");
             export_to_json = this.findPreference("export_to_json");
             export_to_txt = this.findPreference("export_to_txt");
             import_from_json = this.findPreference("import_from_json");
             lock_pattern_test = this.findPreference("lock_pattern_test");
             about = this.findPreference("about");
 
+            night_mode.setOnPreferenceClickListener(this);
             export_to_json.setOnPreferenceClickListener(this);
             export_to_txt.setOnPreferenceClickListener(this);
             import_from_json.setOnPreferenceClickListener(this);
@@ -147,7 +150,9 @@ public class SettingActivity extends Activity {
 
         @Override
         public boolean onPreferenceClick(Preference preference) {
-            if (preference == export_to_json) {
+            if (preference == night_mode) {
+                this.getActivity().recreate();
+            } else if (preference == export_to_json) {
                 export_json_to_sdcard();
                 Toast.makeText(getActivity(), R.string.export_complete,
                         Toast.LENGTH_LONG).show();
@@ -175,7 +180,7 @@ public class SettingActivity extends Activity {
 
                 }
             } else if (preference == lock_pattern_test) {
-                Intent intent = new Intent(this.getActivity(), SettingsActivity.class);
+                Intent intent = new Intent(this.getActivity(), SettingActivity.class);
                 startActivity(intent);
 
             } else if (preference == about) {

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/listview_item_content_height"
-    android:background="?attr/colorPrimary"
+    android:background="?attr/backgroundHeader"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="星期四"
-            android:textColor="?attr/iconTextColor"
+            android:textColor="?attr/myTitleTextColor"
             android:textSize="@dimen/Body" />
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:gravity="right"
             android:text="2015年9月27日"
-            android:textColor="?attr/iconTextColor"
+            android:textColor="?attr/myTitleTextColor"
             android:textSize="@dimen/Title"
             android:textStyle="bold" />
 

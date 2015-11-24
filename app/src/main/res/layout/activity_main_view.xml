@@ -3,7 +3,7 @@
     android:id="@+id/RelativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white"
+    android:background="?attr/backgroundContent"
     android:orientation="vertical">
 
     <se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView
@@ -11,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:scrollbars="none"
         android:overScrollMode="never"
-        android:scrollbarStyle="outsideOverlay" />
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="none" />
 
 </RelativeLayout>

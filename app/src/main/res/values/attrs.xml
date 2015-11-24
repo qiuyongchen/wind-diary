@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <attr name="backgroundContent" format="color" />
+    <attr name="backgroundHeader" format="color" />
     <attr name="iconTextColor" format="color" />
+
     <attr name="primaryTextColor" format="color" />
     <attr name="secondaryTextColor" format="color" />
+    <attr name="myTitleTextColor" format="color" />
+
+    <attr name="preferenceHeaderColor" format="color" />
+    <attr name="preferenceTitleColor" format="color" />
+    <attr name="preferenceSummaryColor" format="color" />
+
     <attr name="iconLeft" format="reference" />
     <attr name="iconSetting" format="reference" />
-
 
     <attr name="mainTextColor" format="reference|color" />
     <attr name="textString" format="string" />

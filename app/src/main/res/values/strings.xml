@@ -72,6 +72,10 @@
 
     <string name="night_mode">夜间模式</string>
 
+    <string name="night_mode_on">开启夜间模式</string>
+
+    <string name="night_mode_off">夜间模式已关闭</string>
+
     <string name="previous">往昔</string>
 
     <string name="setting">设置</string>

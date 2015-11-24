@@ -21,46 +21,46 @@
             android:layout_height="@dimen/activity_tab_font_height">
 
             <Button
+                android:id="@+id/buttonLeft"
                 android:layout_width="@dimen/activity_tab_width"
                 android:layout_height="wrap_content"
-                android:text="@string/today"
-                android:id="@+id/buttonLeft"
-                android:textColor="?attr/iconTextColor"
-                android:background="?attr/colorPrimary"
-                android:layout_centerVertical="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/colorPrimary"
+                android:text="@string/today"
+                android:textColor="?attr/myTitleTextColor"
                 android:textStyle="bold" />
 
             <Button
+                android:id="@+id/buttonRight"
                 android:layout_width="@dimen/activity_tab_width"
                 android:layout_height="wrap_content"
-                android:text="@string/previous"
-                android:id="@+id/buttonRight"
-                android:textColor="?attr/iconTextColor"
-                android:background="?attr/colorPrimary"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/buttonLeft"
                 android:layout_toEndOf="@+id/buttonLeft"
+                android:layout_toRightOf="@+id/buttonLeft"
+                android:background="?attr/colorPrimary"
+                android:text="@string/previous"
+                android:textColor="?attr/myTitleTextColor"
                 android:textStyle="bold" />
 
             <ImageView
+                android:id="@+id/buttonSetting"
                 android:layout_width="@dimen/activity_tab_font_height"
                 android:layout_height="@dimen/activity_tab_font_height"
-                android:id="@+id/buttonSetting"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_margin="@dimen/activity_tab_ic_marin"
                 android:src="?attr/iconSetting"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
                 android:visibility="invisible" />
         </RelativeLayout>
 
         <ImageView
+            android:id="@+id/imageViewBelow"
             android:layout_width="@dimen/activity_tab_width"
             android:layout_height="@dimen/activity_tab_line_height"
-            android:id="@+id/imageViewBelow"
-            android:background="?attr/iconTextColor" />
+            android:background="?attr/myTitleTextColor" />
     </LinearLayout>
 
     <FrameLayout
