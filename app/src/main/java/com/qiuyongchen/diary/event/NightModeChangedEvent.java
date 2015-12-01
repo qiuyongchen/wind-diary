@@ -1,7 +1,7 @@
 package com.qiuyongchen.diary.event;
 
 /**
- * Created by DELL on 2015/12/1.
+ * Created by qiuyongchen on 2015/12/1.
  */
 public class NightModeChangedEvent {
     boolean nightMode;

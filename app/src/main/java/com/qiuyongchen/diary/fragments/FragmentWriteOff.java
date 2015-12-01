@@ -8,12 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.qiuyongchen.diary.R;
 import com.qiuyongchen.diary.data.DataSourceDiary;
 import com.qiuyongchen.diary.date.DateAndTime;
-
-import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 
 /**
  * Created by qiuyongchen on 2015/10/4.
@@ -23,7 +22,7 @@ public class FragmentWriteOff extends Fragment {
     FragmentWriteOffListviewAdapter mAdapterTodayDiary;
     private EditText mEditText;
     private Button mButtonSave;
-    private ExpandableStickyListHeadersListView mListView;
+    private ListView mListView;
     private View.OnClickListener onClickListenerButtonSave = new View.OnClickListener() {
 
         @Override
@@ -52,7 +51,7 @@ public class FragmentWriteOff extends Fragment {
                 .inflate(R.layout.activity_main_write_off,
                         container, false);
 
-        mListView = (ExpandableStickyListHeadersListView) view
+        mListView = (ListView) view
                 .findViewById(R.id.list);
 
         mAdapterTodayDiary = new FragmentWriteOffListviewAdapter(this
