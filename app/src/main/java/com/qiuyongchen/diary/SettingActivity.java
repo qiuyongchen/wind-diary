@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.qiuyongchen.diary.data.DataSourceDiary;
 import com.qiuyongchen.diary.data.DiaryItem;
+import com.qiuyongchen.diary.event.NightModeChangedEvent;
 import com.qiuyongchen.diary.json.JsonCenter;
 import com.qiuyongchen.diary.util.FileUtil;
 import com.qiuyongchen.diary.widget.materialdesign.widgets.Dialog;
@@ -25,6 +26,7 @@ import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 
 import java.util.ArrayList;
 
+import de.greenrobot.event.EventBus;
 import haibison.android.lockpattern.LockPatternActivity;
 
 /**
@@ -71,6 +73,26 @@ public class SettingActivity extends Activity {
 
                 break;
             }// REQ_CREATE_PATTERN
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    // 监听夜间模式
+    public void onEventMainThread(NightModeChangedEvent event) {
+        Log.e("onEvent", "got a message");
+        if (event.getNightMode()) {
+            this.recreate();
         }
     }
 
@@ -151,7 +173,9 @@ public class SettingActivity extends Activity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (preference == night_mode) {
-                this.getActivity().recreate();
+                EventBus.getDefault().post(new NightModeChangedEvent(true)); // 发出夜间模式改变的消息
+                Log.e("onPreferenceClick", "preference == night_mode");
+
             } else if (preference == export_to_json) {
                 export_json_to_sdcard();
                 Toast.makeText(getActivity(), R.string.export_complete,

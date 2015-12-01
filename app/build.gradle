@@ -28,6 +28,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.github.haibison:android-lockpattern:7.0.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
-    compile 'se.emilsjolander:stickylistheaders:2.7.0'
     compile 'com.nineoldandroids:library:2.4.0'
+    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'se.emilsjolander:stickylistheaders:2.7.0'
 }

@@ -6,6 +6,15 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/editText"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="none" />
 
     <EditText
         android:id="@+id/editText"

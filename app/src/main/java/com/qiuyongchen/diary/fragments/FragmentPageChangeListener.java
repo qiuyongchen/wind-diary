@@ -12,7 +12,7 @@ import com.qiuyongchen.diary.MainActivity;
  * Created by qiuyongchen on 2015/10/4.
  */
 
-public class MyFragmentPageChangeListener implements OnPageChangeListener {
+public class FragmentPageChangeListener implements OnPageChangeListener {
 
     private int endPosition;
     private int beginPosition;

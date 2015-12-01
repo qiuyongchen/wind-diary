@@ -18,14 +18,17 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.qiuyongchen.diary.event.NightModeChangedEvent;
+import com.qiuyongchen.diary.fragments.FragmentPageChangeListener;
+import com.qiuyongchen.diary.fragments.FragmentPagerAdapterMain;
 import com.qiuyongchen.diary.fragments.FragmentView;
 import com.qiuyongchen.diary.fragments.FragmentWriteOff;
-import com.qiuyongchen.diary.fragments.MyFragmentPageChangeListener;
-import com.qiuyongchen.diary.fragments.MyFragmentPagerAdapter;
 import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by qiuyongchen on 2015/10/4.
@@ -92,6 +95,26 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    // 监听夜间模式
+    public void onEventMainThread(NightModeChangedEvent event) {
+        Log.e("onEvent", "got a message");
+        if (event.getNightMode()) {
+            this.recreate();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         MobclickAgent.onResume(this);
@@ -134,14 +157,14 @@ public class MainActivity extends FragmentActivity {
         mFragments.add(fb2);
 
         // 数组的适配器，方便管理数组
-        MyFragmentPagerAdapter mFragmentPagerAdapter = new MyFragmentPagerAdapter(
+        FragmentPagerAdapterMain mFragmentPagerAdapterMain = new FragmentPagerAdapterMain(
                 getSupportFragmentManager(), mFragments);
-        mFragmentPagerAdapter.setFragments(mFragments);
+        mFragmentPagerAdapterMain.setFragments(mFragments);
 
         // ViewPager捕获自己的适配器和监听器
-        mViewPager.setAdapter(mFragmentPagerAdapter);
+        mViewPager.setAdapter(mFragmentPagerAdapterMain);
         mViewPager
-                .setOnPageChangeListener(new MyFragmentPageChangeListener());
+                .setOnPageChangeListener(new FragmentPageChangeListener());
 
         // 起始页面
         mViewPager.setCurrentItem(0);

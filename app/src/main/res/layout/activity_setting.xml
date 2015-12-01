@@ -6,7 +6,8 @@
         android:id="@+id/actionbar_setting"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:background="?attr/colorPrimary" >
+        android:layout_alignParentTop="true"
+        android:background="?attr/colorPrimary">
 
         <TextView
             android:id="@+id/textView1"
