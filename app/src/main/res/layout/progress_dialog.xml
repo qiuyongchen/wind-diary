@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#55000000"
-    android:padding="32dp" >
+    android:padding="32dp">
 
     <RelativeLayout
         android:id="@+id/contentDialog"
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/dialog_background"
-        android:padding="24dp" >
+        android:padding="24dp">
 
         <com.qiuyongchen.diary.widget.materialdesign.views.ProgressBarCircularIndeterminate
             android:id="@+id/progressBarCircularIndetermininate"
@@ -26,8 +26,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/progressBarCircularIndetermininate"
             android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@+id/progressBarCircularIndetermininate"
             android:text="Title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#000" />

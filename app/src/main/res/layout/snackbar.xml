@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent">
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:minHeight="56dp"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"
+        android:minHeight="56dp">
 
         <RelativeLayout
             android:id="@+id/snackbar"
@@ -18,7 +18,7 @@
             android:paddingLeft="24dp"
             android:paddingRight="24dp"
             android:paddingTop="18dp"
-            android:visibility="invisible" >
+            android:visibility="invisible">
 
             <com.qiuyongchen.diary.widget.materialdesign.views.ButtonFlat
                 android:id="@+id/buttonflat"
@@ -29,7 +29,7 @@
                 android:layout_marginLeft="24dp"
                 android:text="ACTION" />
 
-             <TextView
+            <TextView
                 android:id="@+id/text"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

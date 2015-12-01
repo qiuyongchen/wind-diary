@@ -44,16 +44,14 @@ public class FragmentPageChangeListener implements OnPageChangeListener {
                 break;
             case 1:
                 Log.i("onPageSelected", "position 1");
-                MainActivity.mIMM.hideSoftInputFromWindow(
-                        MainActivity.mLayoutRoot
-                                .getWindowToken(), 0);
+
                 MainActivity.mButtonSetting.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 Log.i("onPageSelected", "position 2");
-                MainActivity.mIMM.hideSoftInputFromWindow(
+                /*MainActivity.mIMM.hideSoftInputFromWindow(
                         MainActivity.mLayoutRoot
-                                .getWindowToken(), 0);
+                                .getWindowToken(), 0);*/
                 break;
         }
     }

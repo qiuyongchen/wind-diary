@@ -19,6 +19,10 @@
         <item name="preferenceTitleColor">@color/black</item>
         <item name="preferenceSummaryColor">#AAAAAA</item>
 
+        <item name="myButtonColor">#1E88E5</item>
+
+        <item name="myDividerColor">@color/default_primary_color</item>
+
         <item name="iconLeft">@drawable/ic_left_100_white</item>
         <item name="iconSetting">@drawable/ic_settings_512_white</item>
 
@@ -43,6 +47,10 @@
         <item name="preferenceHeaderColor">@color/title_text_color_night</item>
         <item name="preferenceTitleColor">@color/primary_text_color_night</item>
         <item name="preferenceSummaryColor">@color/secondary_text_color_night</item>
+
+        <item name="myButtonColor">@color/title_text_color_night</item>
+
+        <item name="myDividerColor">@color/title_text_color_night</item>
 
         <item name="iconLeft">@drawable/ic_left_100_black</item>
         <item name="iconSetting">@drawable/ic_settings_512_white</item>

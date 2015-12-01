@@ -1,6 +1,5 @@
 package com.qiuyongchen.diary;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -14,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
@@ -40,7 +38,6 @@ public class MainActivity extends FragmentActivity {
     public static ImageView mImageView;
     public static int mDPI;
     public static int mTabWidget;
-    public static InputMethodManager mIMM;
     public static boolean isNight = false;
     public static View mLayoutRoot;
     public static ImageView mButtonSetting;
@@ -72,6 +69,11 @@ public class MainActivity extends FragmentActivity {
 
     };
 
+    public void toWriteOn(View v) {
+        Intent intent = new Intent(MainActivity.this, WriteOnActivity.class);
+        startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +99,8 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     @Override
@@ -129,7 +132,7 @@ public class MainActivity extends FragmentActivity {
     private void initView() {
         mLayoutRoot = findViewById(R.id.RelativeLayoutContent);
         mViewPager = (ViewPager) findViewById(R.id.ViewPager);
-        mIMM = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+
         mImageView = (ImageView) findViewById(R.id.imageViewBelow);
         mButtonLeft = (Button) findViewById(R.id.buttonLeft);
         mButtonRight = (Button) findViewById(R.id.buttonRight);

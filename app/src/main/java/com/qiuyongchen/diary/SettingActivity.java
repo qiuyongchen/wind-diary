@@ -13,7 +13,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.qiuyongchen.diary.data.DataSourceDiary;
@@ -35,17 +34,13 @@ import haibison.android.lockpattern.LockPatternActivity;
 
 public class SettingActivity extends Activity {
     private static final int REQ_CREATE_PATTERN = 1;
-    private static boolean isNight = false;
-    private static SharedPreferences sharedPreferences;
-    private Button c;
-    private SettingsFragment mSettingsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        isNight = sharedPreferences.getBoolean("night_mode", false);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isNight = sharedPreferences.getBoolean("night_mode", false);
         if (isNight) {
             this.setTheme(R.style.AppTheme_Night);
         } else {
@@ -57,7 +52,7 @@ public class SettingActivity extends Activity {
 
         setContentView(R.layout.activity_setting);
         if (savedInstanceState == null) {
-            mSettingsFragment = new SettingsFragment();
+            SettingsFragment mSettingsFragment = new SettingsFragment();
             replaceFragment(R.id.settings_container, mSettingsFragment);
         }
     }
@@ -79,7 +74,8 @@ public class SettingActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
     }
 
     @Override

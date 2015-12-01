@@ -13,6 +13,10 @@
     <attr name="preferenceTitleColor" format="color" />
     <attr name="preferenceSummaryColor" format="color" />
 
+    <attr name="myButtonColor" format="color" />
+
+    <attr name="myDividerColor" format="color" />
+
     <attr name="iconLeft" format="reference" />
     <attr name="iconSetting" format="reference" />
 
