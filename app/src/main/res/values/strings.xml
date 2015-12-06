@@ -34,6 +34,12 @@
 
     <string name="button_save">保存</string>
 
+    <string name="create_lock_pattern_password_tips">我们需要你提供一个特殊的密码，当你忘记手势密码的时候，你可以用这个特殊密码来修改手势（请牢记这个密码）：</string>
+
+    <string name="confirm">确认</string>
+
+    <string name="confirm_three">确认 (3)</string>
+
     <string name="export_complete">导出结束</string>
 
     <string name="export_data">导出</string>
@@ -68,7 +74,9 @@
 
     <string name="like_this_app_detail">如果你喜欢这个软件，请点击这个链接到应用商店里给我们打个五星好评，这将是对我们的极大肯定和鼓励</string>
 
-    <string name="lock_pattern">图案解锁</string>
+    <string name="lock_pattern">手势密码</string>
+
+    <string name="lock_pattern_on">开启手势密码</string>
 
     <string name="night_mode">夜间模式</string>
 

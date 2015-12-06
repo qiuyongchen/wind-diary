@@ -26,7 +26,7 @@ import com.qiuyongchen.diary.widget.systemBarTint.SystemBarTintManager;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
-import haibison.android.lockpattern.LockPatternActivity;
+
 
 /**
  * Created by qiuyongchen on 2015/10/15.
@@ -54,20 +54,6 @@ public class SettingActivity extends Activity {
         if (savedInstanceState == null) {
             SettingsFragment mSettingsFragment = new SettingsFragment();
             replaceFragment(R.id.settings_container, mSettingsFragment);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQ_CREATE_PATTERN: {
-                if (resultCode == RESULT_OK) {
-                    char[] pattern = data.getCharArrayExtra(LockPatternActivity.EXTRA_PATTERN);
-                    Log.i("onActivityResult", String.valueOf(pattern));
-                }
-
-                break;
-            }// REQ_CREATE_PATTERN
         }
     }
 
@@ -200,7 +186,7 @@ public class SettingActivity extends Activity {
 
                 }
             } else if (preference == lock_pattern_test) {
-                Intent intent = new Intent(this.getActivity(), SettingActivity.class);
+                Intent intent = new Intent(this.getActivity(), CreateLockPatternActivity.class);
                 startActivity(intent);
 
             } else if (preference == about) {

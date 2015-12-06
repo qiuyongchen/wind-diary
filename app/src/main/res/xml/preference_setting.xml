@@ -6,17 +6,10 @@
     <PreferenceCategory
         android:layout="@layout/preference_category_widget"
         android:title="安全设置">
-        <PreferenceScreen
-            android:key="lock_pattern"
+        <Preference
+            android:key="lock_pattern_test"
             android:layout="@layout/preference_item"
-            android:persistent="false"
-            android:title="手势密码">
-            <Preference
-                android:key="lock_pattern_test"
-                android:layout="@layout/preference_item"
-                android:summary="@string/export_to_json_detail"
-                android:title="@string/export_to_json" />
-        </PreferenceScreen>
+            android:title="@string/lock_pattern" />
     </PreferenceCategory>
 
     <PreferenceCategory

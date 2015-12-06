@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout="@layout/preference_item"
+    android:title="@string/lock_pattern">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="lock_pattern_on"
+        android:layout="@layout/preference_item"
+        android:title="@string/lock_pattern_on" />
+</PreferenceScreen>

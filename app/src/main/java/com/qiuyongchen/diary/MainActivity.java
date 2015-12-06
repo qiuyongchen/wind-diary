@@ -27,6 +27,7 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import haibison.android.lockpattern.LockPatternActivity;
 
 /**
  * Created by qiuyongchen on 2015/10/4.
@@ -35,6 +36,8 @@ import de.greenrobot.event.EventBus;
 public class MainActivity extends FragmentActivity {
     // This is your preferred flag
     private static final int REQ_CREATE_PATTERN = 1;
+    private static final int REQ_ENTER_PATTERN = 2;
+
     public static ImageView mImageView;
     public static int mDPI;
     public static int mTabWidget;
@@ -94,7 +97,50 @@ public class MainActivity extends FragmentActivity {
         initView();
 
         initViewPager();
+
+        // 检查是否存在手势密码，如果存在就必须验证
+        Boolean isLocked = PreferenceManager.getDefaultSharedPreferences(
+                getApplicationContext()).getBoolean("lock_pattern_on", false);
+        if (isLocked) {
+            LockPatternActivity.IntentBuilder.newPatternComparator(getApplicationContext())
+                    .startForResult(MainActivity.this, REQ_ENTER_PATTERN);
+        }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case REQ_ENTER_PATTERN: {
+                /**
+                 * NOTE that there are 4 possible result codes!!!
+                 */
+                switch (resultCode) {
+                    case RESULT_OK:
+                        break;
+                    case RESULT_CANCELED:
+                        // The user cancelled the task
+                        finish();
+                        break;
+                    case LockPatternActivity.RESULT_FAILED:
+                        // The user failed to enter the pattern
+                        finish();
+                        break;
+                    case LockPatternActivity.RESULT_FORGOT_PATTERN:
+                        // The user forgot the pattern and invoked your recovery Activity.
+                        break;
+                }
+
+                /**
+                 * In any case, there's always a key EXTRA_RETRY_COUNT, which holds
+                 * the number of tries that the user did.
+                 */
+                int retryCount = data.getIntExtra(LockPatternActivity.EXTRA_RETRY_COUNT, 0);
+
+                break;
+            }// REQ_ENTER_PATTERN
+        }
+    }
+
 
     @Override
     public void onStart() {

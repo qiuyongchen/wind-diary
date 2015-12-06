@@ -113,7 +113,6 @@ public class WriteOnActivity extends Activity {
 
                         } else {
 
-
                             Intent intent = new Intent(WriteOnActivity.this, MainActivity.class);
 
                             setResult(RESULT_OK, intent);
@@ -135,7 +134,7 @@ public class WriteOnActivity extends Activity {
 
         // 暂时代替用户保存日记
         String strEditText = mEditText.getText().toString();
-        if (!strEditText.isEmpty()) {
+        if (!strEditText.equals(content)) {
             content = strEditText;
             mEditor.putString("edit_text_content", content);
             mEditor.commit();
