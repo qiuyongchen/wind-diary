@@ -155,7 +155,12 @@ public class SettingActivity extends Activity {
         @Override
         public boolean onPreferenceClick(Preference preference) {
             if (preference == night_mode) {
-                EventBus.getDefault().post(new NightModeChangedEvent(true)); // 发出夜间模式改变的消息
+                // 避免重新绘图的时候又要手势密码的一个标志
+                PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext()).
+                        edit().putBoolean("night_mode_changed", true).commit();
+
+                // 发出夜间模式改变的消息
+                EventBus.getDefault().post(new NightModeChangedEvent(true));
                 Log.e("onPreferenceClick", "preference == night_mode");
 
             } else if (preference == export_to_json) {

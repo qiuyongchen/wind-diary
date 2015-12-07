@@ -294,7 +294,6 @@ public class CreateLockPatternActivity extends Activity {
             super.onPause();
         }
 
-
     }
 }
 

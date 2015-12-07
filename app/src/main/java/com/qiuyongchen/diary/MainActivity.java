@@ -1,5 +1,6 @@
 package com.qiuyongchen.diary;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -101,9 +102,23 @@ public class MainActivity extends FragmentActivity {
         // 检查是否存在手势密码，如果存在就必须验证
         Boolean isLocked = PreferenceManager.getDefaultSharedPreferences(
                 getApplicationContext()).getBoolean("lock_pattern_on", false);
-        if (isLocked) {
+
+        // 检查是否是更改主题导致的界面重绘，如果是就不验证手势密码
+        Boolean isNightModeChanged = PreferenceManager.getDefaultSharedPreferences(
+                getApplicationContext()).getBoolean("night_mode_changed", false);
+
+        // 验证手势密码
+        if (isLocked && !isNightModeChanged) {
+            Intent intent = new Intent(MainActivity.this, ForgotLockPatternActivity.class);
             LockPatternActivity.IntentBuilder.newPatternComparator(getApplicationContext())
+                    .setPendingIntentForgotPattern(PendingIntent.getActivities(getApplicationContext(), 0, new Intent[]{intent}, 0))
                     .startForResult(MainActivity.this, REQ_ENTER_PATTERN);
+        }
+
+        // 重置主题改变的标志
+        if (isNightModeChanged) {
+            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().
+                    putBoolean("night_mode_changed", false).commit();
         }
     }
 
@@ -127,6 +142,7 @@ public class MainActivity extends FragmentActivity {
                         break;
                     case LockPatternActivity.RESULT_FORGOT_PATTERN:
                         // The user forgot the pattern and invoked your recovery Activity.
+                        finish();
                         break;
                 }
 

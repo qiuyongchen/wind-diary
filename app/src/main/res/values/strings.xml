@@ -40,6 +40,10 @@
 
     <string name="confirm_three">确认 (3)</string>
 
+    <string name="enter_lock_pattern_password">请输入验证用的密码，之后手势密码将被清除</string>
+
+    <string name="enter_lock_pattern_password_wrong">验证密码错误</string>
+
     <string name="export_complete">导出结束</string>
 
     <string name="export_data">导出</string>
