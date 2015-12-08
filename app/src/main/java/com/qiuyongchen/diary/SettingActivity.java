@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.qiuyongchen.diary.data.DataSourceDiary;
 import com.qiuyongchen.diary.data.DiaryItem;
+import com.qiuyongchen.diary.event.ImportIntoDB;
 import com.qiuyongchen.diary.event.NightModeChangedEvent;
 import com.qiuyongchen.diary.json.JsonCenter;
 import com.qiuyongchen.diary.util.FileUtil;
@@ -179,6 +180,10 @@ public class SettingActivity extends Activity {
                 if (import_json_from_sdcard()) {
                     Toast.makeText(getActivity(), R.string.import_complete,
                             Toast.LENGTH_LONG).show();
+
+                    // 发出消息，让列表更新
+                    EventBus.getDefault().post(new ImportIntoDB());
+
                     Log.i("onPreferenceClick",
                             " click import_from_json and succeed");
 

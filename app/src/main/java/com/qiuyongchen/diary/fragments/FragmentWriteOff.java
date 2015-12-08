@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.qiuyongchen.diary.R;
+import com.qiuyongchen.diary.event.ImportIntoDB;
 import com.qiuyongchen.diary.event.NewDiaryIntoDBEvent;
 
 import de.greenrobot.event.EventBus;
@@ -85,11 +86,17 @@ public class FragmentWriteOff extends Fragment {
             mEditText.setText(content);
     }
 
+    // 监听是否“从JSON文件导入到数据库”
+    public void onEvent(ImportIntoDB importIntoDB) {
+        Log.e("onEventMainThread", "got a message ImportIntoDB");
+        mAdapterTodayDiary.loadFromDatabase();
+        mListView.setSelection(mAdapterTodayDiary.getCount() - 1);
+    }
+
     // 监听是否有新保存的日记
     public void onEventMainThread(NewDiaryIntoDBEvent event) {
         Log.e("onEventMainThread", "got a message NewDiaryIntoDBEvent");
         mAdapterTodayDiary.loadFromDatabase();
-        mAdapterTodayDiary.notifyDataSetChanged();
         mListView.setSelection(mAdapterTodayDiary.getCount() - 1);
     }
 }

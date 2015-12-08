@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.qiuyongchen.diary.R;
+import com.qiuyongchen.diary.event.ImportIntoDB;
 
+import de.greenrobot.event.EventBus;
 import se.emilsjolander.stickylistheaders.ExpandableStickyListHeadersListView;
 
 /**
@@ -24,7 +26,7 @@ public class FragmentView extends Fragment implements AbsListView.OnScrollListen
     private final int LOAD_STATE_LOADING = 1;// 正在加载状态
     private final int LOAD_STATE_FINISH = 2;// 表示服务器上的全部数据都已加载完毕
     public FloatingActionButton fabStatistics;
-    FragmentViewListviewAdapter mAdapterPreviousDiary;
+    private FragmentViewListviewAdapter mAdapterPreviousDiary;
     private ExpandableStickyListHeadersListView mListView;
     private int loadState = LOAD_STATE_IDLE;// 记录加载的状态
     private Handler handler = new Handler();
@@ -38,6 +40,22 @@ public class FragmentView extends Fragment implements AbsListView.OnScrollListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    // 收到数据改变的消息，更新列表
+    public void onEventMainThread(ImportIntoDB importIntoDB) {
+        Log.i("onEventMainThread", "got a message ImportIntoDB");
+        mAdapterPreviousDiary.loadFromDatabase();
+        mListView.setSelection(mAdapterPreviousDiary.getCount() - 1);
     }
 
     @Override
