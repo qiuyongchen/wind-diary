@@ -3,7 +3,6 @@ package com.qiuyongchen.diary;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.preference.PreferenceManager;
 import android.text.Selection;
 import android.text.Spannable;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -72,6 +70,17 @@ public class WriteOnActivity extends Activity {
         mEditText.requestFocus();
         mEditText.setFocusable(true);
 
+        // 延时弹出键盘（等待布局的完成）
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager inputManager =
+                        (InputMethodManager) mEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                inputManager.showSoftInput(mEditText, 0);
+            }
+        }, 500);
+
     }
 
     @Override
@@ -89,42 +98,6 @@ public class WriteOnActivity extends Activity {
             Spannable spanText = (Spannable) text;
             Selection.setSelection(spanText, text.length());
         }
-
-        // 延时弹出键盘（等待布局的完成）
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                InputMethodManager inputManager =
-                        (InputMethodManager) mEditText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputManager.showSoftInput(mEditText, 0);
-            }
-        }, 200);
-
-        // 监听键盘是否被隐藏
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                final View activityRootView = findViewById(R.id.rootRelative);
-                activityRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        int heightDiff = activityRootView.getRootView().getHeight() - activityRootView.getHeight();
-                        if (heightDiff > 100) { // 如果高度差超过100像素，就很有可能是有软键盘...
-
-                        } else {
-
-                            Intent intent = new Intent(WriteOnActivity.this, MainActivity.class);
-
-                            setResult(RESULT_OK, intent);
-
-                            finish();
-
-                            overridePendingTransition(R.anim.hold, R.anim.fade);
-                        }
-                    }
-                });
-            }
-        }, 300);
 
     }
 
