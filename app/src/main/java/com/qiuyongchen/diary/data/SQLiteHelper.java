@@ -11,7 +11,7 @@ import android.util.Log;
  *
  * @author qiuyongchen
  */
-public class SQLiteHelperDiary extends SQLiteOpenHelper {
+public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String TABLE_DIARY = "diary";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_CONTENT = "content";
@@ -24,15 +24,15 @@ public class SQLiteHelperDiary extends SQLiteOpenHelper {
     /**
      * Create a helper object to create and open a database.
      */
-    public SQLiteHelperDiary(Context context) {
+    public SQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     /**
      * Create a helper object to create and open a database.
      */
-    public SQLiteHelperDiary(Context context, String name,
-                             CursorFactory factory, int version) {
+    public SQLiteHelper(Context context, String name,
+                        CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
@@ -46,9 +46,9 @@ public class SQLiteHelperDiary extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(SQLiteHelperDiary.class.getName(),
+        Log.w(SQLiteHelper.class.getName(),
                 "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
+                        + newVersion + ", which will update all old data");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DIARY);
         onCreate(db);
     }

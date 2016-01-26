@@ -247,8 +247,8 @@ public class FragmentViewListviewAdapter extends BaseAdapter implements
     }
 
     public String strnumToStrdate(String strnum) {
-        return strnum.substring(4, 8) + "/" + strnum.substring(0, 2) + "/"
-                + strnum.substring(2, 4) + "";
+        return strnum.substring(0, 4) + "/" + strnum.substring(4, 6) + "/"
+                + strnum.substring(6, 8) + "";
     }
 
     public class HeaderViewHolder {

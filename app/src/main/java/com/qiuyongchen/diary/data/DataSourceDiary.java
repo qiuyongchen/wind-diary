@@ -7,8 +7,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.qiuyongchen.diary.date.DateAndTime;
+import com.qiuyongchen.diary.util.ComparatorDiaryItem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * to open/close database, read something from database, write something to
@@ -18,19 +20,25 @@ import java.util.ArrayList;
  */
 public class DataSourceDiary {
     private SQLiteDatabase mSQLiteDatabase;
-    private SQLiteHelperDiary mSQLiteHelperDiary;
+    private SQLiteHelper mSQLiteHelper;
 
     private ContentValues value;
 
     public DataSourceDiary(Context context) {
-        mSQLiteHelperDiary = new SQLiteHelperDiary(context);
+        mSQLiteHelper = new SQLiteHelper(context);
         value = new ContentValues();
     }
 
     private void close() {
-        mSQLiteHelperDiary.close();
+        mSQLiteHelper.close();
     }
 
+    /**
+     * 通过游标读出数据库的内容
+     *
+     * @param cursor 游标
+     * @return 读出的所有的内容
+     */
     public ArrayList<DiaryItem> cursorToArrayList(Cursor cursor) {
         ArrayList<DiaryItem> item = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -38,13 +46,13 @@ public class DataSourceDiary {
             String content, date, time;
             while (!cursor.isAfterLast()) {
                 _id = cursor.getInt(cursor
-                        .getColumnIndex(SQLiteHelperDiary.COLUMN_ID));
+                        .getColumnIndex(SQLiteHelper.COLUMN_ID));
                 content = cursor.getString(cursor
-                        .getColumnIndex(SQLiteHelperDiary.COLUMN_CONTENT));
+                        .getColumnIndex(SQLiteHelper.COLUMN_CONTENT));
                 date = cursor.getString(cursor
-                        .getColumnIndex(SQLiteHelperDiary.COLUMN_DATE));
+                        .getColumnIndex(SQLiteHelper.COLUMN_DATE));
                 time = cursor.getString(cursor
-                        .getColumnIndex(SQLiteHelperDiary.COLUMN_TIME));
+                        .getColumnIndex(SQLiteHelper.COLUMN_TIME));
                 item.add(new DiaryItem(_id, content, date, time));
                 cursor.moveToNext();
             }
@@ -59,13 +67,13 @@ public class DataSourceDiary {
             String content, date, time;
             while (!cursor.isBeforeFirst()) {
                 _id = cursor.getInt(cursor
-                        .getColumnIndex(SQLiteHelperDiary.COLUMN_ID));
+                        .getColumnIndex(SQLiteHelper.COLUMN_ID));
                 content = cursor.getString(cursor
-                        .getColumnIndex(SQLiteHelperDiary.COLUMN_CONTENT));
+                        .getColumnIndex(SQLiteHelper.COLUMN_CONTENT));
                 date = cursor.getString(cursor
-                        .getColumnIndex(SQLiteHelperDiary.COLUMN_DATE));
+                        .getColumnIndex(SQLiteHelper.COLUMN_DATE));
                 time = cursor.getString(cursor
-                        .getColumnIndex(SQLiteHelperDiary.COLUMN_TIME));
+                        .getColumnIndex(SQLiteHelper.COLUMN_TIME));
                 item.add(new DiaryItem(_id, content, date, time));
                 cursor.moveToPrevious();
             }
@@ -102,11 +110,11 @@ public class DataSourceDiary {
                                 + " date:" + mArrayList.get(i).date + " time:"
                                 + mArrayList.get(i).time + " and succeed");
                 value.clear();
-                value.put(SQLiteHelperDiary.COLUMN_CONTENT,
+                value.put(SQLiteHelper.COLUMN_CONTENT,
                         mArrayList.get(i).content);
-                value.put(SQLiteHelperDiary.COLUMN_DATE, mArrayList.get(i).date);
-                value.put(SQLiteHelperDiary.COLUMN_TIME, mArrayList.get(i).time);
-                mSQLiteDatabase.insert(SQLiteHelperDiary.TABLE_DIARY, null,
+                value.put(SQLiteHelper.COLUMN_DATE, mArrayList.get(i).date);
+                value.put(SQLiteHelper.COLUMN_TIME, mArrayList.get(i).time);
+                mSQLiteDatabase.insert(SQLiteHelper.TABLE_DIARY, null,
                         value);
             }
             mSQLiteDatabase.setTransactionSuccessful();
@@ -121,10 +129,10 @@ public class DataSourceDiary {
     public long insert(String content, String date, String time) {
         this.open();
         value.clear();
-        value.put(SQLiteHelperDiary.COLUMN_CONTENT, content);
-        value.put(SQLiteHelperDiary.COLUMN_DATE, date);
-        value.put(SQLiteHelperDiary.COLUMN_TIME, time);
-        long val = mSQLiteDatabase.insert(SQLiteHelperDiary.TABLE_DIARY, null,
+        value.put(SQLiteHelper.COLUMN_CONTENT, content);
+        value.put(SQLiteHelper.COLUMN_DATE, date);
+        value.put(SQLiteHelper.COLUMN_TIME, time);
+        long val = mSQLiteDatabase.insert(SQLiteHelper.TABLE_DIARY, null,
                 value);
         this.close();
         return val;
@@ -134,14 +142,14 @@ public class DataSourceDiary {
         this.open();
         value.clear();
 
-        value.put(SQLiteHelperDiary.COLUMN_DATE, date);
-        value.put(SQLiteHelperDiary.COLUMN_TIME, time);
+        value.put(SQLiteHelper.COLUMN_DATE, date);
+        value.put(SQLiteHelper.COLUMN_TIME, time);
         long val = 0;
         mSQLiteDatabase.beginTransaction();
 
         for (int i = 0; i < 1000; i++) {
-            value.put(SQLiteHelperDiary.COLUMN_CONTENT, "第" + String.valueOf(i));
-            val = mSQLiteDatabase.insert(SQLiteHelperDiary.TABLE_DIARY, null,
+            value.put(SQLiteHelper.COLUMN_CONTENT, "第" + String.valueOf(i));
+            val = mSQLiteDatabase.insert(SQLiteHelper.TABLE_DIARY, null,
                     value);
         }
         mSQLiteDatabase.setTransactionSuccessful();
@@ -202,11 +210,18 @@ public class DataSourceDiary {
         this.open();
         Cursor cursor = mSQLiteDatabase
                 .rawQuery("select * from diary where "
-                                + SQLiteHelperDiary.COLUMN_DATE
+                                + SQLiteHelper.COLUMN_DATE
                                 + " != ? order by date, time, _id DESC",
                         new String[]{String.valueOf(DateAndTime
                                 .getCurrentDate())});
         item = cursorToArrayList(cursor);
+        String str;
+        for (DiaryItem i : item) {
+            str = i.getDate();
+            str = str.substring(4, 8) + str.substring(0, 4);
+            i.setDate(str);
+        }
+        Collections.sort(item, new ComparatorDiaryItem());
         this.close();
         return item;
     }
@@ -215,7 +230,7 @@ public class DataSourceDiary {
         ArrayList<DiaryItem> item = new ArrayList<DiaryItem>();
         this.open();
         Cursor cursor = mSQLiteDatabase.rawQuery("select * from diary where "
-                        + SQLiteHelperDiary.COLUMN_DATE
+                        + SQLiteHelper.COLUMN_DATE
                         + " = ? order by date, time, _id DESC",
                 new String[]{String.valueOf(date)});
         item = cursorToArrayList(cursor);
@@ -227,7 +242,7 @@ public class DataSourceDiary {
         ArrayList<DiaryItem> item = new ArrayList<DiaryItem>();
         this.open();
         Cursor cursor = mSQLiteDatabase.rawQuery("select * from diary where "
-                        + SQLiteHelperDiary.COLUMN_DATE
+                        + SQLiteHelper.COLUMN_DATE
                         + " = ? order by date, time, _id DESC",
                 new String[]{DateAndTime.getCurrentDate()});
         item = cursorToArrayList(cursor);
@@ -236,7 +251,7 @@ public class DataSourceDiary {
     }
 
     private void open() {
-        mSQLiteDatabase = mSQLiteHelperDiary.getWritableDatabase();
+        mSQLiteDatabase = mSQLiteHelper.getWritableDatabase();
     }
 
 }
